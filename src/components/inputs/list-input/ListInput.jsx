@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Animations from '../../../Animations/Animations';
+import Animations from '../../../animations/Animations';
 import { useTranslation } from 'react-i18next';
 import { IoIosArrowForward } from 'react-icons/io';
 import { PiWarningCircle } from "react-icons/pi";

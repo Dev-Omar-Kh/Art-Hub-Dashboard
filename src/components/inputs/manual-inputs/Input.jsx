@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Animations from '../../../Animations/Animations';
+import Animations from '../../../animations/Animations';
 import LoadingInput from './LoadingInput';
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import { useTranslation } from 'react-i18next';
