@@ -1,0 +1,77 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap');
+@import "tailwindcss";
+
+:root{
+
+    --white-color: #FFFFFF;
+    --sky-blue-color: #E0ECFC;
+    --dark-blue-color: #112947;
+    --black-color: #1f1f1fed;
+    --gray-color: #8E8E8E;
+    --light-gray-color: #F8F9FA;
+    --green-color: #38A169;
+    --light-red-color: #FFE5E9;
+    --mid-red-color: #FFC1C8;
+    --red-color: #E53E3E;
+    --mid-blue-color: #C1D1E6;
+
+    /* ====== custom-colors ====== */
+
+    --light-dark-blue-color: rgba(17, 41, 71, 0.5);
+    --mid-mid-blue-color: rgba(193, 209, 230, 0.75);
+    --light-mid-blue-color: rgba(193, 209, 230, 0.25);
+    --shadow-black-color: rgba(31, 31, 31, 0.05);
+    --mid-gray-color: rgba(142, 142, 142, 0.5);
+    --light-gray-color: rgba(142, 142, 142, 0.05);
+    --mid-green-color: rgba(56, 161, 105, 0.5);
+    --light-green-color: rgba(56, 161, 105, 0.05);
+
+}
+
+body{
+
+    overflow-x: hidden;
+    /* font-family: "Cairo", sans-serif; */
+    font-family: "Tajawal", sans-serif;
+
+}
+
+::-webkit-scrollbar {
+
+    width: 5px;
+    background-color: var(--white-color);
+
+}
+
+::-webkit-scrollbar-thumb {
+
+    background-color: var(--dark-blue-color);
+
+}
+
+.common-p{
+    padding: 50px 4.5%;
+}
+
+.main-p {
+    padding: 50px 2.25%;
+}
+
+.content-width{
+    width: calc(100% - 20rem);
+}
+
+.list-top{
+    top: calc(100% + 0.625rem);
+}
+
+/* ====== responsive-design ====== */
+
+@media only screen and (max-width: 980px){
+
+    .content-width{
+        width: 100%;
+    }
+
+}

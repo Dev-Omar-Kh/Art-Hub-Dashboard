@@ -1,0 +1,62 @@
+{
+
+    "emailWord": "البريد الإلكتروني",
+    "emailPlaceHolder": "أدخل بريدك الإلكتروني",
+    "passwordWord": "كلمة المرور",
+    "passwordPlaceHolder": "أدخل كلمة المرور",
+    "loginWord": "تسجيل الدخول",
+    "emailRequiredError": "البريد الإلكتروني مطلوب",
+    "emailInvalidError": "البريد الإلكتروني غير صالح",
+    "passwordMinError": "الحد الأدنى 6 أحرف",
+    "passwordRequiredError": "كلمة المرور مطلوبة",
+
+    "logoutWord": "تسجيل الخروج",
+
+    "homeWord": "لوحة التحكم الرئيسية",
+    "usersManageWord": "إدارة المستخدمين",
+    "settingSystemWord": "إعدادات النظام",
+    "ordersWord": "الطلبات",
+    "salesAnalysisWord": "تحليل المبيعات",
+    "ratesWord": "التقييمات",
+    "reportsWord": "التقارير",
+
+    "homePageSlogan": "راقب مؤشرات الأداء ونشاط عملك",
+    "downloadReportWord": "تحميل التقرير",
+    "displayAnalysisWod": "عرض التحليلات",
+
+    "totalUsersWord": "إجمالي المستخدمين",
+    "activeArtistsWord": "الفنانين النشطين",
+    "totalRevenueWord": "إجمالي الإيرادات",
+
+    "comparedLastMonth": "مقارنة بالشهر الماضي",
+
+    "revenueStatistics": "إحصائيات الإيرادات",
+    "orderStatistics": "إحصائيات الطلبات",
+
+    "lastXMonthWord": "آخر {{count}} شهرًا",
+    "lastMonthWord": "آخر شهر",
+
+    "weeklyWord": "أسبوعيًا",
+    "monthlyWord": "شهريًا",
+    "yearlyWord": "سنويًا",
+
+    "rejectedWord": "مرفوض",
+    "completedWord": "مكتمل",
+    "progressWord": "قيد التنفيذ",
+
+    "janMonth": "يناير",
+    "febMonth": "فبراير",
+    "marMonth": "مارس",
+    "aprMonth": "أبريل",
+    "mayMonth": "مايو",
+    "junMonth": "يونيو",
+    "julMonth": "يوليو",
+    "augMonth": "أغسطس",
+    "sepMonth": "سبتمبر",
+    "octMonth": "أكتوبر",
+    "novMonth": "نوفمبر",
+    "decMonth": "ديسمبر",
+
+    "mostArtistsTitle": "أعلى الفنانين اداء"
+
+}
