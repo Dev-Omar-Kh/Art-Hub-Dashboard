@@ -4,11 +4,9 @@ import { IoIosArrowBack } from 'react-icons/io';
 import { AnimatePresence, motion } from 'framer-motion';
 import Animations from '../../animations/Animations';
 
-export default function ListBtn({listData, color='var(--sky-blue-color)'}) {
+export default function ListBtn({listData, color='var(--sky-blue-color)', filterKey, onFilterChange}) {
 
     const {t} = useTranslation();
-
-    // const listData = ['اخر 12 شهر', 'اخر 9 شهور', 'اخر 6 شور', 'اخر 3 شهور', 'اخر شهر'];
 
     const [displayList, setDisplayList] = useState(false);
     const [chosenItem, setChosenItem] = useState(listData[0]);
@@ -38,6 +36,7 @@ export default function ListBtn({listData, color='var(--sky-blue-color)'}) {
 
     const choseItem = (item) => {
 
+        onFilterChange(filterKey, item);
         setChosenItem(item);
         setDisplayList(false);
 
