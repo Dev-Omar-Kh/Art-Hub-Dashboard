@@ -8,9 +8,12 @@
     --sky-blue-color: #E0ECFC;
     --dark-blue-color: #112947;
     --black-color: #1f1f1fed;
+    --light-black-color: #2D3748;
     --gray-color: #8E8E8E;
+    --mid-gray-color: #E2E8F0;
     --light-gray-color: #F8F9FA;
     --green-color: #38A169;
+    --light-green-color: #C6F6D5;
     --light-red-color: #FFE5E9;
     --mid-red-color: #FFC1C8;
     --red-color: #E53E3E;
@@ -25,7 +28,7 @@
     --mid-gray-color: rgba(142, 142, 142, 0.5);
     --light-gray-color: rgba(142, 142, 142, 0.05);
     --mid-green-color: rgba(56, 161, 105, 0.5);
-    --light-green-color: rgba(56, 161, 105, 0.05);
+    /* --light-green-color: rgba(56, 161, 105, 0.05); */
 
 }
 
@@ -64,6 +67,10 @@ body{
 
 .list-top{
     top: calc(100% + 0.625rem);
+}
+
+.hidden-scroll::-webkit-scrollbar{
+    display: none;
 }
 
 /* ====== responsive-design ====== */

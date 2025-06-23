@@ -57,6 +57,28 @@
     "novMonth": "نوفمبر",
     "decMonth": "ديسمبر",
 
-    "mostArtistsTitle": "أعلى الفنانين اداء"
+    "mostArtistsTitle": "أعلى الفنانين اداء",
+
+    "exportDataWord": "تصدير البيانات",
+    "userManagementPageSlogan": "إدارة وتنظيم حسابات المستخدمين",
+    "usersSearchWord": "بحث عن المستخدمين...",
+
+    "allUsersWord": "الجميع",
+    "artistsWord": "الفنانين",
+    "clientsWord": "العملاء",
+    "artistWord": "فنان",
+    "clientWord": "عميل",
+
+    "allStatusWord": "كل الحالات",
+    "activeWord": "نشط",
+    "bannedWord": "محظور",
+
+    "nameWord": "الاسم",
+    "typeWord": "النوع",
+    "statusWord": "الحالة",
+    "joinDateWord": "تاريخ الانضمام",
+    "profileWord": "الملف الشخصي",
+    "actionsWord": "الإجراءات",
+    "viewProfileWord": "عرض التفاصيل"
 
 }

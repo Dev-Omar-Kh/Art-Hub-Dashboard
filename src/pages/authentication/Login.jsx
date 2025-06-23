@@ -20,7 +20,7 @@ export default function Login() {
     const values = {
         email: '',
         password: ''
-    }
+    };
 
     const formikObj = useFormik ({
 

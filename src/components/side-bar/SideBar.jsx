@@ -46,7 +46,7 @@ export default function SideBar({setDisplayNav}) {
 
             <div className='w-full flex items-center justify-center max-[980px]:justify-between'>
 
-                <img className='w-24' src={logo} alt='logo image' />
+                <img className='w-24' src={logo} alt='logo image' loading='lazy' />
 
                 <CgCloseO
                     onClick={() => setDisplayNav(false)}

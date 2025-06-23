@@ -57,7 +57,10 @@ export default function MostArtists({data}) {
                     </div>
 
                     <div className='p-1 rounded-full w-28 h-28 border-5 border-[var(--sky-blue-color)] overflow-hidden'>
-                        <img className='w-full h-full object-cover rounded-full' src={card.img} alt={`${card.name} Image`} />
+                        <img 
+                            className='w-full h-full object-cover rounded-full' 
+                            src={card.img} alt={`${card.name} Image`} loading='lazy'
+                        />
                     </div>
 
                     <div className='flex flex-col justify-center items-center'>

@@ -4,7 +4,7 @@ import { IoIosArrowBack } from 'react-icons/io';
 import { AnimatePresence, motion } from 'framer-motion';
 import Animations from '../../animations/Animations';
 
-export default function ListBtn({listData}) {
+export default function ListBtn({listData, color='var(--sky-blue-color)'}) {
 
     const {t} = useTranslation();
 
@@ -49,9 +49,10 @@ export default function ListBtn({listData}) {
 
             <button 
                 onClick={() => setDisplayList(!displayList)}
+                style={{backgroundColor: color}}
                 className='
-                    w-fit px-3 py-1.5 flex items-center gap-2.5 rounded-md 
-                    text-[var(--dark-blue-color)] bg-[var(--sky-blue-color)] cursor-pointer
+                    w-fit px-3 py-2.5 flex items-center gap-2.5 rounded-md 
+                    text-[var(--dark-blue-color)] cursor-pointer
                 '
             >
 
@@ -79,7 +80,7 @@ export default function ListBtn({listData}) {
                             onClick={() => choseItem(item)}
                             className={`
                                 w-full p-2.5 border-b border-solid border-[var(--sky-blue-color)] last:border-0 font-medium
-                                text-[var(--dark-blue-color)] duration-300 hover:bg-[var(--sky-blue-color)] cursor-pointer
+                                text-[var(--dark-blue-color)] text-center duration-300 hover:bg-[var(--sky-blue-color)] cursor-pointer
                                 ${chosenItem === item ? 'bg-[var(--sky-blue-color)]' : 'bg-[var(--white-color)]'}
                             `}
                         >{t(item)}</li>)}
