@@ -19,7 +19,7 @@ export default function Home() {
 
     const homeButtons = [
         // {id: 1, title: 'displayAnalysisWod', color: 'white'},
-        {id: 2, title: 'downloadReportWord', icon: <LuCloudDownload/>, color: 'blue'},
+        {id: 2, title: 'downloadReportWord', icon: <LuCloudDownload/>, color: 'var(--white-color)', bgColor: 'var(--dark-blue-color)'},
     ];
 
     // ====== statistics-section-data ====== //

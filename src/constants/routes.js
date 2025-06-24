@@ -11,5 +11,8 @@ export const ROUTES = {
     SETTINGS_ROUTE: '/settings',
     ABOUT_ROUTE: '/about',
     CONTACT_ROUTE: '/contact',
-    HELP_ROUTE: '/help'
+    HELP_ROUTE: '/help',
+    ARTIST_PROFILE_ROUTE: 'profile/artist',
+    CLIENT_PROFILE_ROUTE: 'profile/client',
+    SEND_MESSAGE_ROUTE: '/send-message'
 }

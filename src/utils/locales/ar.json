@@ -79,6 +79,19 @@
     "joinDateWord": "تاريخ الانضمام",
     "profileWord": "الملف الشخصي",
     "actionsWord": "الإجراءات",
-    "viewProfileWord": "التفاصيل"
+    "viewProfileWord": "التفاصيل",
+
+    "clientProfileWord": "ملف العميل",
+    "clientProfileSlogan": "ملف تعريفي شامل للزائر",
+    "sendMessageWord": "إرسال رسالة",
+    "banWord": "حظر",
+
+    "totalOrdersWord": "إجمالي الطلبات",
+    "totalPaymentWord": "إجمالي المدفوعات",
+    "rateCountWord": "عدد التقييمات",
+    "rateAverageWord": "متوسط التقييم",
+
+    "artistProfileWord": "ملف الفنان",
+    "artistProfileSlogan": "ملف تعريفي شامل للفنان وتحليلات البيانات"
 
 }

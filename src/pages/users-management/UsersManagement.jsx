@@ -5,14 +5,16 @@ import SearchInput from '../../components/inputs/search-input/SearchInput'
 import ListBtn from '../../components/buttons/ListBtn';
 import Table from '../../components/table/Table';
 import { useTranslation } from 'react-i18next';
-
-// ====== import-images ====== //
-
-import userPfp from '../../assets/images/artist.jpg';
 import Numbers from '../../services/convertNum';
 import { Link } from 'react-router-dom';
 import { IoIosArrowForward } from 'react-icons/io';
 import { IoBanSharp } from 'react-icons/io5';
+import { LuMessageSquareText } from 'react-icons/lu';
+
+// ====== import-images ====== //
+
+import userPfp from '../../assets/images/artist.jpg';
+import { ROUTES } from '../../constants/routes';
 
 const tableData = {
 
@@ -129,8 +131,7 @@ export default function UsersManagement() {
     const { t, i18n } = useTranslation();
 
     const usersButtons = [
-        {id: 2, title: 'exportDataWord', icon: <PiExportBold/>, color: 'blue'},
-
+        {id: 2, title: 'exportDataWord', icon: <PiExportBold/>, color: 'var(--white-color)', bgColor: 'var(--dark-blue-color)'},
     ];
 
     const listButtonsData = [
@@ -149,8 +150,9 @@ export default function UsersManagement() {
 
     ];
 
-    // ====== handle-filter-data ====== //
+    // ====== handle-filter-&-search-data ====== //
 
+    const [searchText, setSearchText] = useState('');
     const [filters, setFilters] = useState({
         type: 'allUsersWord',
         status: 'allStatusWord'
@@ -158,30 +160,39 @@ export default function UsersManagement() {
 
     const [filteredArray, setFilteredArray] = useState(tableData.data);
 
+    const onSearch = (value) => {
+        setSearchText(value);
+    }
+
     useEffect(() => {
 
-        if (tableData.data) {
+        let filteredData = tableData.data;
 
-            const filteredData = tableData.data.filter(officer => {
-                const typeMatch = filters.type === 'allUsersWord' || officer.type === filters.type;
-                const statusMatch = filters.status === 'allStatusWord' || officer.status === filters.status;
-                return typeMatch && statusMatch;
-            });
-
-            setFilteredArray(filteredData);
-
+        if (filters.type !== 'allUsersWord') {
+            filteredData = filteredData.filter(user => user.type === filters.type);
         }
 
-    }, [filters]);
+        if (filters.status !== 'allStatusWord') {
+            filteredData = filteredData.filter(user => user.status === filters.status);
+        }
 
-    // ====== handle-search-process ====== //
+        if (searchText.trim() !== '') {
+            const searchLower = searchText.toLowerCase();
+            filteredData = filteredData.filter(user =>
+                user.name.toLowerCase().includes(searchLower) ||
+                user.email.toLowerCase().includes(searchLower)
+            );
+        }
 
-    const onSearch = (value) => {
-        setFilteredArray(tableData.data.filter(user => 
-            user.name.toLowerCase().includes(value.toLowerCase()) || 
-            user.email.toLowerCase().includes(value.toLowerCase())
-        ));
-    }
+        setFilteredArray(filteredData);
+
+    }, [filters, searchText]);
+
+    // ====== profile-url ====== //
+
+    const profileId = (user) => {
+        return `${user.type === 'clientWord' ? ROUTES.CLIENT_PROFILE_ROUTE : ROUTES.ARTIST_PROFILE_ROUTE}/${user.userId}`
+    };
 
     return <React.Fragment>
 
@@ -192,7 +203,7 @@ export default function UsersManagement() {
             <div className='w-full flex flex-wrap gap-5 items-center justify-between'>
 
                 <div className='w-sm'>
-                    <SearchInput id={'userSearch'} placeholder={'usersSearchWord'} onSearch={(value) => onSearch(value)}/>
+                    <SearchInput id={'userSearch'} placeholder={'usersSearchWord'} onSearch={onSearch}/>
                 </div>
 
                 <div className='flex flex-wrap items-center gap-2.5'>
@@ -206,7 +217,7 @@ export default function UsersManagement() {
 
             </div>
 
-            <div className='w-full rounded-2xl bg-[var(--white-color)] border border-[var(--mid-gray-color)] overflow-hidden'>
+            <div className='w-full rounded-2xl bg-[var(--white-color)] overflow-hidden'>
 
                 <Table data={filteredArray} 
                     columns={tableData.columns} 
@@ -293,7 +304,7 @@ export default function UsersManagement() {
                             `}>
                                 <div className='flex items-center justify-center'>
                                     <Link 
-                                        to={`profile/${user.useId}`}
+                                        to={profileId(user)}
                                         className='
                                             px-2 py-1 flex items-center justify-center gap-1 cursor-pointer 
                                             text-[var(--dark-blue-color)] bg-[var(--mid-blue-color)] rounded-md
@@ -308,17 +319,31 @@ export default function UsersManagement() {
                         </React.Fragment>
                     )}
                     onActionClick={(user) => (
-                        <button 
-                            // onClick={() => handleBanClick(user)}
-                            id={`banUser-${user.id}`}
-                            className='
-                                    p-2.5 rounded-md bg-[var(--light-red-color)]
-                                    text-[var(--red-color)] cursor-pointer duration-300
-                                    hover:bg-[var(--red-color)] hover:text-[var(--white-color)]
-                            '
-                        >
-                            <IoBanSharp />
-                        </button>
+                        <div className='w-full flex items-center justify-center gap-2.5'>
+
+                            <Link 
+                                to={`update-admin-data/${user.userId}`} 
+                                className='
+                                    p-2.5 rounded-md bg-[var(--sky-blue-color)]
+                                    text-[var(--dark-blue-color)] cursor-pointer duration-300
+                                '
+                            >
+                                <LuMessageSquareText />
+                            </Link>
+
+                            <button 
+                                // onClick={() => handleBanClick(user)}
+                                id={`banUser-${user.id}`}
+                                className='
+                                        p-2.5 rounded-md bg-[var(--light-red-color)]
+                                        text-[var(--red-color)] cursor-pointer duration-300
+                                        hover:bg-[var(--red-color)] hover:text-[var(--white-color)]
+                                '
+                            >
+                                <IoBanSharp />
+                            </button>
+
+                        </div>
                     )}
                 />
 
