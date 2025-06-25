@@ -45,9 +45,9 @@ export default function ClientProfile() {
 
             <PathSteps paths={paths} />
 
-            {/* <ClientData achData={clientAchievements} />
+            <ClientData achData={clientAchievements} />
 
-            <ProfileActions /> */}
+            <ProfileActions />
 
         </section>
 

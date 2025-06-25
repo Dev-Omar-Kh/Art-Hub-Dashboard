@@ -14,5 +14,8 @@ export const ROUTES = {
     HELP_ROUTE: '/help',
     ARTIST_PROFILE_ROUTE: 'profile/artist',
     CLIENT_PROFILE_ROUTE: 'profile/client',
-    SEND_MESSAGE_ROUTE: '/send-message'
+    SEND_MESSAGE_ROUTE: '/send-message',
+    CLIENT_ORDERS_ROUTE: 'orders',
+    CLIENT_RATES_ROUTE: 'rates',
+    CLIENT_ACTIVITY_LOG_ROUTE: 'activity-log',
 }

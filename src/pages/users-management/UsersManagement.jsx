@@ -15,6 +15,7 @@ import { LuMessageSquareText } from 'react-icons/lu';
 
 import userPfp from '../../assets/images/artist.jpg';
 import { ROUTES } from '../../constants/routes';
+import ElementBox from '../../components/elements-box/ElementBox';
 
 const tableData = {
 
@@ -244,18 +245,7 @@ export default function UsersManagement() {
                                     border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
                                 `}
                             >
-                                <div className='w-full flex items-center justify-center'>
-
-                                    <p 
-                                        className='
-                                            w-fit py-1 px-2.5 rounded-4xl 
-                                            bg-[var(--sky-blue-color)] text-[var(--dark-blue-color)]
-                                        '
-                                    >
-                                    {t(user.type)}
-                                </p>
-
-                                </div>
+                                <ElementBox title={user.type} bgColor={'var(--sky-blue-color)'} color={'var(--dark-blue-color)'} />
                             </td>
 
                             <td 
@@ -273,18 +263,11 @@ export default function UsersManagement() {
                                     border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
                                 `}
                             >
-
-                                <div className='w-full flex items-center justify-center'>
-                                    <p className={`
-                                        w-fit py-1 px-2.5 rounded-4xl 
-                                        ${user.status === 'bannedWord' 
-                                            ? 'bg-[var(--light-red-color)] text-[var(--red-color)]' 
-                                            : 'bg-[var(--light-green-color)] text-[var(--green-color)]'
-                                        }
-                                        font-medium 
-                                    `}>{t(user.status)}</p>
-                                </div>
-
+                                <ElementBox 
+                                    title={user.status} 
+                                    color={user.status === 'bannedWord' ? 'var(--red-color)' : 'var(--green-color)'} 
+                                    bgColor={user.status === 'bannedWord' ? 'var(--light-red-color)' : 'var(--light-green-color)'} 
+                                />
                             </td>
 
                             <td 
