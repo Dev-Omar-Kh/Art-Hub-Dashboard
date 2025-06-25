@@ -10,7 +10,7 @@ export default function OverView() {
     const lastProductsData = [
 
         {id: 1, title: 'لوحة زيتية مخصصة', artist: 'احمد محمد', date: '18-1-2025', price: '850', status: 'completedWord'},
-        {id: 2, title: 'لوحة مائية حديثة', artist: 'عمر خالد', date: '10-11-2024', price: '1180', status: 'completedWord'},
+        {id: 2, title: 'لوحة مائية حديثة', artist: 'عمر خالد', date: '10-11-2024', price: '1180', status: 'rejectedWord'},
         {id: 3, title: 'رسم بالفحم لمنظر طبيعي', artist: 'ليلى علي', date: '5-2-2025', price: '990', status: 'progressWord'},
         {id: 4, title: 'بورتريه كلاسيكي', artist: 'سارة محمود', date: '22-3-2025', price: '1250', status: 'completedWord'},
 
