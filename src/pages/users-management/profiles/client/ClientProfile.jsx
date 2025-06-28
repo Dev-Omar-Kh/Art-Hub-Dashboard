@@ -7,14 +7,17 @@ import ClientData from './ClientData'
 import PathSteps from '../../../../components/path-steps/PathSteps'
 import { GoStarFill } from 'react-icons/go'
 import ProfileActions from './ProfileActions'
+import { useParams } from 'react-router-dom'
 
 export default function ClientProfile() {
+
+    const {id} = useParams();
 
     const profileButtons =[
 
         {
             id: 1, 
-            url: ROUTES.SEND_MESSAGE_ROUTE,
+            url: `${ROUTES.USERS_ROUTE}/${ROUTES.SEND_MESSAGE_ROUTE}/${id}`,
             title: 'sendMessageWord',
             icon: <LuMessageSquareText />, 
             color: 'var(--white-color)', 

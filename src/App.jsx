@@ -10,9 +10,13 @@ const MainLayout = React.lazy(() => import('./layouts/MainLayout'));
 const Login = React.lazy(() => import('./pages/authentication/Login'));
 const Loading = React.lazy(() => import('./pages/status-pages/Loading'));
 const UsersManagement = React.lazy(() => import('./pages/users-management/UsersManagement'));
+const MessageForm = React.lazy(() => import('./pages/users-management/message-form/MessageForm'));
 const ArtistProfile = React.lazy(() => import('./pages/users-management/profiles/artist/ArtistProfile'));
 const ClientProfile = React.lazy(() => import('./pages/users-management/profiles/client/ClientProfile'));
 const OverView = React.lazy(() => import('./pages/users-management/profiles/client/profile-actions/OverView'));
+const ClientLog = React.lazy(() => import('./pages/users-management/profiles/client/profile-actions/ClientLog'));
+const ClientRates = React.lazy(() => import('./pages/users-management/profiles/client/profile-actions/ClientRates'));
+const ClientOrders = React.lazy(() => import('./pages/users-management/profiles/client/profile-actions/ClientOrders'));
 
 const routes = createHashRouter([
 
@@ -25,11 +29,12 @@ const routes = createHashRouter([
             {path: `${ROUTES.CLIENT_PROFILE_ROUTE}/:id`, element: <ClientProfile />, children: [
 
                 {index: true, element: <OverView />},
-                {path: ROUTES.CLIENT_ORDERS_ROUTE, element: <h1>Client Orders Page</h1>},
-                {path: ROUTES.CLIENT_RATES_ROUTE, element: <h1>Client Rates Page</h1>},
-                {path: ROUTES.CLIENT_ACTIVITY_LOG_ROUTE, element: <h1>Client Activity Log Page</h1>},
+                {path: ROUTES.CLIENT_ORDERS_ROUTE, element: <ClientOrders />},
+                {path: ROUTES.CLIENT_RATES_ROUTE, element: <ClientRates />},
+                {path: ROUTES.CLIENT_ACTIVITY_LOG_ROUTE, element: <ClientLog />},
 
             ]},
+            {path: `${ROUTES.SEND_MESSAGE_ROUTE}/:id`, element: <MessageForm />},
         ]},
         {path: ROUTES.ORDERS_ROUTE, element: <h1>صفحة الطلبات</h1>},
         {path: ROUTES.SALES_ANALYSIS_ROUTE, element: <h1>صفحة تحليل المبيعات</h1>},

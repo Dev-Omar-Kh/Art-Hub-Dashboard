@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useMemo } from 'react'
 import MainTitle from '../../components/Titles/MainTitle'
 import { PiExportBold } from 'react-icons/pi'
 import SearchInput from '../../components/inputs/search-input/SearchInput'
@@ -10,12 +10,13 @@ import { Link } from 'react-router-dom';
 import { IoIosArrowForward } from 'react-icons/io';
 import { IoBanSharp } from 'react-icons/io5';
 import { LuMessageSquareText } from 'react-icons/lu';
+import { ROUTES } from '../../constants/routes';
+import ElementBox from '../../components/elements-box/ElementBox';
+import { useFilterAndSearch } from '../../hooks/useFilterAndSearch';
 
 // ====== import-images ====== //
 
 import userPfp from '../../assets/images/artist.jpg';
-import { ROUTES } from '../../constants/routes';
-import ElementBox from '../../components/elements-box/ElementBox';
 
 const tableData = {
 
@@ -153,41 +154,15 @@ export default function UsersManagement() {
 
     // ====== handle-filter-&-search-data ====== //
 
-    const [searchText, setSearchText] = useState('');
-    const [filters, setFilters] = useState({
+    const initialFilters = {
         type: 'allUsersWord',
         status: 'allStatusWord'
-    });
+    };
 
-    const [filteredArray, setFilteredArray] = useState(tableData.data);
-
-    const onSearch = (value) => {
-        setSearchText(value);
-    }
-
-    useEffect(() => {
-
-        let filteredData = tableData.data;
-
-        if (filters.type !== 'allUsersWord') {
-            filteredData = filteredData.filter(user => user.type === filters.type);
-        }
-
-        if (filters.status !== 'allStatusWord') {
-            filteredData = filteredData.filter(user => user.status === filters.status);
-        }
-
-        if (searchText.trim() !== '') {
-            const searchLower = searchText.toLowerCase();
-            filteredData = filteredData.filter(user =>
-                user.name.toLowerCase().includes(searchLower) ||
-                user.email.toLowerCase().includes(searchLower)
-            );
-        }
-
-        setFilteredArray(filteredData);
-
-    }, [filters, searchText]);
+    const excludeValues = useMemo(() => ['allUsersWord', 'allStatusWord'], []);
+    const {filteredData, setFilters, setSearchText} = useFilterAndSearch(
+        tableData.data, initialFilters, excludeValues
+    );
 
     // ====== profile-url ====== //
 
@@ -204,14 +179,18 @@ export default function UsersManagement() {
             <div className='w-full flex flex-wrap gap-5 items-center justify-between'>
 
                 <div className='w-sm'>
-                    <SearchInput id={'userSearch'} placeholder={'usersSearchWord'} onSearch={onSearch}/>
+                    <SearchInput 
+                        id={'userSearch'} placeholder={'usersSearchWord'} 
+                        onSearch={(value) => setSearchText(value)}
+                    />
                 </div>
 
                 <div className='flex flex-wrap items-center gap-2.5'>
                     {listButtonsData.map((list, idx) => (
                         <ListBtn 
-                            key={idx} listData={list.data} filterKey={list.key} color={'var(--white-color)'} 
-                            onFilterChange={(key, value) => setFilters(prev => ({...prev, [key]: value}))}
+                            key={idx} listData={list.data} filterKey={list.key} 
+                            color={'var(--white-color)'} 
+                            onFilterChange={(key, value) => setFilters(prev => ({ ...prev, [key]: value }))}
                         />
                     ))}
                 </div>
@@ -220,7 +199,7 @@ export default function UsersManagement() {
 
             <div className='w-full rounded-2xl bg-[var(--white-color)] overflow-hidden'>
 
-                <Table data={filteredArray} 
+                <Table data={filteredData} 
                     columns={tableData.columns} 
                     actions={true}
                     renderRow={(user) => (
@@ -305,7 +284,7 @@ export default function UsersManagement() {
                         <div className='w-full flex items-center justify-center gap-2.5'>
 
                             <Link 
-                                to={`update-admin-data/${user.userId}`} 
+                                to={`${ROUTES.SEND_MESSAGE_ROUTE}/${user.userId}`} 
                                 className='
                                     p-2.5 rounded-md bg-[var(--sky-blue-color)]
                                     text-[var(--dark-blue-color)] cursor-pointer duration-300

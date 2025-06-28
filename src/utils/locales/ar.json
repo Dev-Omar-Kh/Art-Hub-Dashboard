@@ -98,6 +98,32 @@
     "theArtistWord": "الفنان",
     "currencyWord": "ريال",
 
+    "allClientOrders": "كل طلبات العميل",
+
+    "orderNumWord": "رقم الطلب",
+    "theArtworkWord": "العمل الفني",
+    "priceWord": "السعر",
+    "dateWord": "التاريخ",
+    "addedRatesWord": "التقييمات المضافة",
+    "newWord": "جديد",
+    "infoWord": "معلومات",
+
+    "sendMessagePageSlogan": "أرسل رسالة سريعة للمستخدم",
+    "messageSubjectWord": "موضوع الرسالة",
+    "messageSubjectPlaceHolder": "أدخل موضوع الرسالة",
+    "messageTextWord": "نص الرسالة",
+    "messageTextPlaceholder": "أدخل نص الرسالة",
+    "uploadFilesWord": "أضف مرفقات",
+    "sendWord": "إرسال",
+    "cancelWord": "إلغاء",
+    "subjectMinError": "الموضوع قصير جدًا",
+    "subjectMaxError": "الموضوع طويل جدًا",
+    "subjectRequiredError": "الموضوع مطلوب",
+
+    "messageSendMinError": "الرسالة قصيرة جدًا",
+    "messageSendMaxError": "الرسالة طويلة جدًا",
+    "messageSendRequiredError": "الرسالة مطلوبة",
+
     "artistProfileWord": "ملف الفنان",
     "artistProfileSlogan": "ملف تعريفي شامل للفنان وتحليلات البيانات"
 

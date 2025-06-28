@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next';
 
-export default function Table({columns, data, renderRow, onActionClick, actions}) {
+export default function Table({columns, data, renderRow, onActionClick, actions, tHeadColor}) {
 
     const { t, i18n } = useTranslation();
 
@@ -11,7 +11,7 @@ export default function Table({columns, data, renderRow, onActionClick, actions}
 
             <table className='w-full border-collapse'>
 
-                <thead>
+                <thead style={tHeadColor ? { backgroundColor: tHeadColor } : {}}>
 
                     <tr className='text-base text-[var(--dark-blue-color)] text-center'>
 

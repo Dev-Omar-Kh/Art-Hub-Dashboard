@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 
-export default function Textarea({id, label, placeHolder, value, onChange, onBlur}) {
+export default function Textarea({id, label, placeHolder, value, onChange, onBlur, ValidationError}) {
 
     const {t} = useTranslation();
 
@@ -26,20 +26,23 @@ export default function Textarea({id, label, placeHolder, value, onChange, onBlu
 
             <label 
                 className={`
-                    text-base font-medium 
-                    ${hasValue ? 'text-[var(--blue-color)]' : 'text-[var(--gray-color-2)]'} 
-                    duration-300 group-focus-within:text-[var(--blue-color)]
+                    flex items-center justify-between gap-1.5 text-base font-medium 
+                    ${hasValue ? 'text-[var(--dark-blue-color)]' : 'text-[var(--gray-color)]'} 
+                    duration-300 group-focus-within:text-[var(--dark-blue-color)]
                 `} 
                 htmlFor={id}
-            >{t(label)} :</label>
+            >
+                <p>{t(label)} :</p>
+                {ValidationError && <p className='text-[0.6875rem] text-[var(--red-color)]'>* {ValidationError}</p>}
+            </label>
 
             <textarea 
                 id={id} placeholder={t(placeHolder)}
                 className={`
-                    w-full h-24 p-2.5 rounded-md border border-solid resize-none
-                    ${hasValue ? 'border-[var(--blue-color)]' : 'border-[var(--gray-color-2)]'} 
+                    w-full field-sizing-content min-h-28 max-h-96 p-2.5 rounded-md border border-solid resize-none
+                    ${hasValue ? 'border-[var(--dark-blue-color)]' : 'border-[var(--gray-color)]'} 
                     placeholder:text-[var(--gray-color)]
-                    outline-0 duration-300 focus:border-[var(--blue-color)] text-base font-medium text-[var(--black-color)]
+                    outline-0 duration-300 focus:border-[var(--dark-blue-color)] text-base font-medium text-[var(--black-color)]
                 `}
                 autoComplete='off'
                 value={value} onChange={handleInputChange} onBlur={handleBlur} 

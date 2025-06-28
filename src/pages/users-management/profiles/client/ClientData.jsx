@@ -1,13 +1,14 @@
 import React from 'react';
-
-// ====== import-images ====== //
-
-import clientImg from '../../../../assets/images/artist.jpg';
 import { MdOutlineMail, MdOutlinePhoneEnabled } from 'react-icons/md';
 import Numbers from '../../../../services/convertNum';
 import { useTranslation } from 'react-i18next';
 import { IoCalendarOutline, IoLocationOutline } from 'react-icons/io5';
 import ElementBox from '../../../../components/elements-box/ElementBox';
+import CurrencyImage from '../../../../components/currency/CurrencyImage';
+
+// ====== import-images ====== //
+
+import clientImg from '../../../../assets/images/artist.jpg';
 
 export default function ClientData({achData}) {
 
@@ -84,7 +85,7 @@ export default function ClientData({achData}) {
                         >
                             {item.icon && <span style={{color: item.iconColor}} className='text-xl'>{item.icon}</span>}
                             <p>{Numbers(item.value, i18n.language)}</p>
-                            {item.isMoney && '$'}
+                            {item.isMoney && <CurrencyImage width={'w-5'} color='green' />}
                         </div>
                         <h3 className='text-lg text-center font-medium text-[var(--gray-color)]'>{t(item.title)}</h3>
                     </div>

@@ -76,7 +76,10 @@ export default function Login() {
                 </motion.div>
 
                 <motion.div variants={Animations.toTopVariants} className='w-full'>
-                    <FormBtn title={'loginWord'} />
+                    <FormBtn title={'loginWord'} 
+                        rounded={'rounded-md'} color={'var(--dark-blue-color)'} 
+                        bgColor={'var(--sky-blue-color)'} type={'submit'}
+                    />
                 </motion.div>
 
             </motion.form>

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import ListBtn from '../../../components/buttons/ListBtn';
 import Numbers from '../../../services/convertNum';
 import LineChart from './LineChart';
+import CurrencyImage from '../../../components/currency/CurrencyImage';
 
 export default function AnalysisCard({data}) {
 
@@ -30,8 +31,12 @@ export default function AnalysisCard({data}) {
 
                         <h3 className={`text-base font-bold text-[var(--gray-color)]`}>{t(item.title)}</h3>
 
-                        <p className={`text-xl font-semibold text-center`} style={{color: item.color}}>
-                            {`${Numbers(item.value, i18n.language)} ${item.isMoney ? '$' : ''}`}
+                        <p className={`flex items-center gap-1 text-xl font-semibold text-center`} style={{color: item.color}}>
+                            {`${Numbers(item.value, i18n.language)}`}
+                            {item.isMoney && <CurrencyImage 
+                                width={'w-5'} 
+                                color={item.color === 'var(--green-color)' ? 'green' : 'blue'} 
+                            />}
                         </p>
 
                     </div>
