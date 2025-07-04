@@ -2,8 +2,8 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import ListBtn from '../../../components/buttons/ListBtn';
 import Numbers from '../../../services/convertNum';
-import LineChart from './LineChart';
 import CurrencyImage from '../../../components/currency/CurrencyImage';
+import LineChart from './../../../components/charts/LineChart';
 
 export default function AnalysisCard({data}) {
 

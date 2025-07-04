@@ -18,7 +18,7 @@
     "ordersWord": "الطلبات",
     "salesAnalysisWord": "تحليل المبيعات",
     "ratesWord": "التقييمات",
-    "reportsWord": "التقارير",
+    "reportsWord": "البلاغات",
 
     "homePageSlogan": "راقب مؤشرات الأداء ونشاط عملك",
     "downloadReportWord": "تحميل التقرير",
@@ -125,6 +125,76 @@
     "messageSendRequiredError": "الرسالة مطلوبة",
 
     "artistProfileWord": "ملف الفنان",
-    "artistProfileSlogan": "ملف تعريفي شامل للفنان وتحليلات البيانات"
+    "artistProfileSlogan": "ملف تعريفي شامل للفنان وتحليلات البيانات",
+
+    "ordersManageWord": "إدارة الطلبات",
+    "ordersManagementPageSlogan": "إدارة وتنظيم طلبات المستخدمين",
+
+    "orderDateWord": "تاريخ الطلب",
+    "recipientCustomerWord": "العميل المستلم",
+
+    "orderSearchWord": "بحث عن طلب...",
+    "allArtistsWord": "كل الفنانين",
+
+    "ratesManageWord": "إدارة التقييمات",
+    "ratesManagementPageSlogan": "إدارة وتنظيم تقييمات المستخدمين",
+
+    "rateWord": "التقييم",
+    "commentWord": "التعليق",
+    "viewCommentWord": "عرض التعليق",
+
+    "allRatesWord": "جميع التقييمات",
+    "5StarWord": "5 نجوم",
+    "4StarWord": "4 نجوم",
+    "lessThan3StarWord": "أقل من 3 نجوم",
+
+    "reportsManageWord": "إدارة البلاغات",
+    "reportsManagementPageSlogan": "إدارة وتنظيم بلاغات المستخدمين",
+
+    "complainantWord": "المُشتكي",
+    "reportTypeWord": "نوع البلاغ",
+    "reportDescriptionWord": "وصف البلاغ",
+    "viewReportWord": "عرض البلاغ",
+
+    "allTypesWord": "كل الأنواع",
+    "pendingWord": "تحت المراجعة",
+    "reviewedWord": "تمت المراجعة",
+    "resolvedWord": "تم الحل",
+
+    "reportSearchWord": "بحث عن بلاغ...",
+
+    "salesAnalysisPageSlogan": "راقب أداء المبيعات وإيرادات الفنانين",
+
+    "totalSalesWord": "إجمالي المبيعات",
+    "ordersCountWord": "عدد الطلبات",
+    "mostArtistSellerWord": "الفنان الأكثر مبيعًا",
+
+    "trackSalesWord": "تتبع المبيعات",
+
+    "topArtistsSellerWord": "أفضل الفنانين مبيعاً",
+
+    "orderCountWord": "عدد الطلبات",
+    "sealsCountWord": "المبيعات",
+    "growthWord": "النمو",
+    "artistTypeWord": "نوع الفن",
+
+    "systemSettingsWord": "إعدادات النظام",
+    "systemSettingsPageSlogan": "إدارة وتخصيص إعدادات النظام",
+
+    "accountSettingWord": "الحساب",
+    "usersSettingWordWord": "المستخدمين",
+    "orderSettingWord": "الطلبات",
+    "paymentSettingWord": "الدفع",
+    "policySettingWord": "سياسة الخصوصية",
+
+    "updateImageWord": "حدث الصورة",
+    "currentPasswordWord": "كلمة المرور الحالية",
+    "currentPasswordPlaceHolder": "أدخل كلمة المرور الحالية",
+    "newPasswordWord": "كلمة المرور الجديدة",
+    "newPasswordPlaceHolder": "أدخل كلمة المرور الجديدة",
+    "confirmNewPasswordWord": "تأكيد كلمة المرور",
+    "confirmNewPasswordPlaceHolder": "أكد كلمة المرور الجديدة",
+
+    "updateWord": "تحديث"
 
 }

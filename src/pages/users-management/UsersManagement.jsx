@@ -160,8 +160,9 @@ export default function UsersManagement() {
     };
 
     const excludeValues = useMemo(() => ['allUsersWord', 'allStatusWord'], []);
+    const searchKeys  = useMemo(() => ['name', 'email'], []);
     const {filteredData, setFilters, setSearchText} = useFilterAndSearch(
-        tableData.data, initialFilters, excludeValues
+        tableData.data, initialFilters, excludeValues, searchKeys 
     );
 
     // ====== profile-url ====== //
@@ -260,10 +261,12 @@ export default function UsersManagement() {
                                 )).reverse().join(' - ')}
                             </td>
 
-                            <td className={`
-                                ${i18n.language === 'en' ? 'border-l' : 'border-r'} 
-                                border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
-                            `}>
+                            <td 
+                                className={`
+                                    ${i18n.language === 'en' ? 'border-l' : 'border-r'} 
+                                    border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
+                                `}
+                            >
                                 <div className='flex items-center justify-center'>
                                     <Link 
                                         to={profileId(user)}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export const useFilterAndSearch = (data, initialFilters = {}, excludeValues = []) => {
+export const useFilterAndSearch = (data, initialFilters = {}, excludeValues = [], searchKeys) => {
     const [searchText, setSearchText] = useState('');
     const [filters, setFilters] = useState(initialFilters);
     const [filteredData, setFilteredData] = useState(data);
@@ -10,22 +10,38 @@ export const useFilterAndSearch = (data, initialFilters = {}, excludeValues = []
         let result = [...data];
 
         Object.entries(filters).forEach(([key, value]) => {
-            if (!excludeValues.includes(value)) {
+
+            if (excludeValues.includes(value)) return;
+
+            if (key === 'rate') {
+
+                if (value === '5StarWord') {
+                    result = result.filter(item => Math.floor(item.rate) === 5);
+                } else if (value === '4StarWord') {
+                    result = result.filter(item => Math.floor(item.rate) === 4);
+                } else if (value === 'lessThan3StarWord') {
+                    result = result.filter(item => Math.floor(item.rate) <= 3);
+                }
+
+            }
+            else {
                 result = result.filter(item => item[key] === value);
             }
+
         });
 
         if (searchText.trim() !== '') {
             const searchLower = searchText.toLowerCase();
             result = result.filter(item =>
-                item.name?.toLowerCase().includes(searchLower) ||
-                item.email?.toLowerCase().includes(searchLower)
+                searchKeys.some(key =>
+                    item[key]?.toString().toLowerCase().includes(searchLower)
+                )
             );
         }
 
         setFilteredData(result);
 
-    }, [data, filters, searchText, excludeValues]);
+    }, [data, filters, searchText, excludeValues, searchKeys]);
 
     return {
         filteredData,

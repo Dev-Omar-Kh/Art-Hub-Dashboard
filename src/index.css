@@ -24,6 +24,7 @@
     /* ====== custom-colors ====== */
 
     --light-dark-blue-color: rgba(17, 41, 71, 0.5);
+    --opacity-black-color: rgba(31, 31, 31, 0.9);
     --mid-mid-blue-color: rgba(193, 209, 230, 0.75);
     --light-mid-blue-color: rgba(193, 209, 230, 0.25);
     --shadow-black-color: rgba(31, 31, 31, 0.05);

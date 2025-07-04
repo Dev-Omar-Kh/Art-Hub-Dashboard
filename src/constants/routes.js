@@ -18,4 +18,9 @@ export const ROUTES = {
     CLIENT_ORDERS_ROUTE: 'orders',
     CLIENT_RATES_ROUTE: 'rates',
     CLIENT_ACTIVITY_LOG_ROUTE: 'activity-log',
+    // ACCOUNT_SETTING_ROUTE: '',
+    USERS_SETTING_ROUTE: 'users-setting',
+    ORDERS_SETTING_ROUTE: 'orders-setting',
+    PAYMENT_SETTING_ROUTE: 'payment-setting',
+    POLICY_SETTING_ROUTE: 'policy-setting',
 }

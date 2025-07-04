@@ -57,7 +57,7 @@ export default function ClientOrders() {
 
             </div>
 
-            <div className='w-full rounded-2xl  overflow-hidden'>
+            <div className='w-full rounded-2xl overflow-hidden'>
 
                 <Table data={filteredData}
                     tHeadColor={'var(--light-gray-color)'}

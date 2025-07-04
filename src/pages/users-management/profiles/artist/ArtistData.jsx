@@ -1,36 +1,46 @@
 import React from 'react';
+
+// ====== import-images ====== //
+
+import profileCover from '../../../../assets/images/cover-image.jpg';
+import pfpImg from '../../../../assets/images/artist.jpg';
+import ElementBox from '../../../../components/elements-box/ElementBox';
 import { MdOutlineMail, MdOutlinePhoneEnabled } from 'react-icons/md';
 import Numbers from '../../../../services/convertNum';
 import { useTranslation } from 'react-i18next';
 import { IoCalendarOutline, IoLocationOutline } from 'react-icons/io5';
-import ElementBox from '../../../../components/elements-box/ElementBox';
-import CurrencyImage from '../../../../components/currency/CurrencyImage';
 
-// ====== import-images ====== //
+export default function ArtistData() {
 
-import clientImg from '../../../../assets/images/artist.jpg';
-import ProfileAchieve from '../../../../components/profile-achievement/ProfileAchieve';
-
-export default function ClientData({achData}) {
-
-    const { i18n } = useTranslation();
+    const {i18n} = useTranslation();
 
     return <React.Fragment>
 
-        <div className='w-full grid grid-cols-5 gap-5 max-[735px]:grid-cols-1'>
+        <div className='w-full grid grid-cols-1 gap-5 max-[735px]:grid-cols-1'>
 
-            <div className='relative flex flex-col gap-2.5 rounded-2xl bg-[var(--white-color)] p-5 col-span-2 max-[735px]:col-span-1'>
+            <div 
+                className='
+                    relative flex flex-col gap-2.5 rounded-2xl bg-[var(--white-color)] 
+                    overflow-hidden col-span-2 max-[735px]:col-span-1
+                '
+            >
 
-                <div className='absolute top-5 end-5'>
+                <div className='absolute top-5 end-5 z-20'>
                     <ElementBox title={'activeWord'} bgColor={'var(--light-green-color)'} color={'var(--green-color)'} />
                 </div>
 
-                <img src={clientImg} 
-                    alt={`client image`} 
-                    className='w-20 h-20 rounded-full object-cover border-3 border-[var(--dark-blue-color)]' 
-                />
+                <div className='relative w-full h-32'>
+                    <img 
+                        src={pfpImg} alt={`profile image`}
+                        className='
+                            absolute start-5 -bottom-10 w-20 h-20 rounded-full 
+                            object-cover border-4 border-[var(--white-color)]
+                        ' 
+                    />
+                    <img className='w-full h-full object-cover' src={profileCover} alt={`profile cover image`} />
+                </div>
 
-                <div className='flex flex-col gap-2.5'>
+                <div className='mt-8 p-5 pt-0 flex flex-col gap-1'>
 
                     <h3 className='text-2xl font-semibold text-[var(--dark-blue-color)]'>عمر خالد محمد</h3>
 
@@ -65,8 +75,6 @@ export default function ClientData({achData}) {
                 </div>
 
             </div>
-
-            <ProfileAchieve achieveData={achData} />
 
         </div>
 

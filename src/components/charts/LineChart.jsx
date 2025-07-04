@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale, Filler, Tooltip } from 'chart.js';
-import Numbers from '../../../services/convertNum';
+import Numbers from '../../services/convertNum';
 import { useTranslation } from 'react-i18next';
 
 Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Filler, Tooltip);
