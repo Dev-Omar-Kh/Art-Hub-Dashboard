@@ -17,7 +17,11 @@ export default function AnalysisCard({data}) {
 
                 <h3 className='text-lg font-semibold text-[var(--dark-blue-color)]'>{t(data.title)}</h3>
 
-                <ListBtn listData={data.filterListData} />
+                <ListBtn 
+                    listData={data.filterListData.data} 
+                    filterKey={data.filterListData.ke}
+                    onFilterChange={() => console.log('filter')}
+                />
 
             </div>
 

@@ -6,8 +6,8 @@ import { ROUTES } from '../../../../constants/routes'
 import ClientData from './ClientData'
 import PathSteps from '../../../../components/path-steps/PathSteps'
 import { GoStarFill } from 'react-icons/go'
-import ProfileActions from './ProfileActions'
 import { useParams } from 'react-router-dom'
+import ProfileLayout from '../../../../layouts/ProfileLayout'
 
 export default function ClientProfile() {
 
@@ -40,6 +40,13 @@ export default function ClientProfile() {
         {id: 4, title: 'rateAverageWord', value: '4.8', icon: <GoStarFill />, iconColor: 'var(--yellow-color)', isMoney: false},
     ]
 
+    const linksData = [
+        {id: 1, title: 'overViewWord', to: ''},
+        {id: 2, title: 'ordersWord', to: ROUTES.CLIENT_ORDERS_ROUTE},
+        {id: 3, title: 'ratesWord', to: ROUTES.CLIENT_RATES_ROUTE},
+        {id: 4, title: 'activityLogWord', to: ROUTES.CLIENT_ACTIVITY_LOG_ROUTE},
+    ];
+
     return <React.Fragment>
 
         <section className='w-full flex flex-col gap-10'>
@@ -50,7 +57,7 @@ export default function ClientProfile() {
 
             <ClientData achData={clientAchievements} />
 
-            <ProfileActions />
+            <ProfileLayout linksData={linksData} />
 
         </section>
 

@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import MainTitle from '../../components/Titles/MainTitle';
-import { PiExportBold } from 'react-icons/pi';
+import { PiExportBold, PiWarningOctagonBold } from 'react-icons/pi';
 import Table from '../../components/table/Table';
 import Numbers from '../../services/convertNum';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,9 @@ import { IoBanSharp } from 'react-icons/io5';
 import SearchInput from '../../components/inputs/search-input/SearchInput';
 import { useFilterAndSearch } from '../../hooks/useFilterAndSearch';
 import ListBtn from '../../components/buttons/ListBtn';
+import { AnimatePresence } from 'framer-motion';
+import PopUp from '../../components/pop-up/PopUp';
+import WarningBox from '../../components/pop-up/warning-box/WarningBox';
 
 const tableData = {
 
@@ -185,17 +188,18 @@ export default function OrdersManagement() {
         {id: 2, title: 'exportDataWord', icon: <PiExportBold />, color: 'var(--white-color)', bgColor: 'var(--dark-blue-color)'},
     ];
 
+    const uniqueStatuses = [...new Set(tableData.data.map(user => user.status))];
     const listButtonsData = [
 
         {
-            id: 1,
-            data: ['allArtistsWord', ...new Set(tableData.data.map(order => order.artist))],
-            key: 'artist'
-        },
-
-        {
             id: 2,
-            data: ['allStatusWord', ...new Set(tableData.data.map(order => order.status))],
+            data: [
+                { value: 'allStatusWord', label: 'allStatusWord' },
+                ...uniqueStatuses.map(status => ({
+                    value: status,
+                    label: status
+                }))
+            ],
             key: 'status'
         },
 
@@ -214,7 +218,25 @@ export default function OrdersManagement() {
         tableData.data, initialFilters, excludeValues, searchKeys
     );
 
+    // ====== handle-delete-row ====== //
+
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleDeleteRow = () => {
+        setIsOpen(true);
+    }
+
     return <React.Fragment>
+
+    <AnimatePresence>
+        {isOpen && <PopUp onClose={() => setIsOpen(false)}>
+            <WarningBox 
+                icon={<PiWarningOctagonBold />} 
+                title={'deleteOrderTitle'} msg={'deleteOrderMsg'} 
+                onClose={() => setIsOpen(false)}
+            />
+        </PopUp>}
+    </AnimatePresence>
 
         <section className='w-full flex flex-col gap-10'>
 
@@ -340,7 +362,7 @@ export default function OrdersManagement() {
                             <div className='w-full flex items-center justify-center gap-2.5'>
 
                                 <button 
-                                    // onClick={() => handleBanClick(user)}
+                                    onClick={() => handleDeleteRow(order)}
                                     id={`banUser-${order.id}`}
                                     className='
                                             p-2.5 rounded-md bg-[var(--light-red-color)]

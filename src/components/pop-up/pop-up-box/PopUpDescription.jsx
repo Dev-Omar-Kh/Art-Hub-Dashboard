@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { IoClose } from 'react-icons/io5';
 
@@ -6,31 +6,9 @@ export default function PopUpDescription({title, onClose, msg}) {
 
     const {t} = useTranslation();
 
-    // ====== handle-click-outside-list ====== //
-
-    const boxRef = useRef(null);
-
-    const handleClickOutside = useCallback((event) => {
-
-        if (boxRef.current && !boxRef.current.contains(event.target)) {
-            onClose();
-        }
-
-    }, [onClose]);
-
-    useEffect(() => {
-
-        document.addEventListener('mousedown', handleClickOutside);
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-
-    }, [handleClickOutside]);
-
     return <React.Fragment>
 
-        <div ref={boxRef} className='w-md max-w-full p-5 bg-[var(--white-color)] flex flex-col gap-5 rounded-md'>
+        <div className='flex flex-col gap-5'>
 
             <div className="flex items-center justify-between">
 

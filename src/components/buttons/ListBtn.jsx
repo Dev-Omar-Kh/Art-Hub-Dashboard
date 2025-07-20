@@ -35,12 +35,10 @@ export default function ListBtn({listData, color='var(--sky-blue-color)', filter
     // ====== handle-change-item ====== //
 
     const choseItem = (item) => {
-
-        onFilterChange(filterKey, item);
+        onFilterChange(filterKey, item.value);
         setChosenItem(item);
         setDisplayList(false);
-
-    }
+    };
 
     return <React.Fragment>
 
@@ -55,7 +53,7 @@ export default function ListBtn({listData, color='var(--sky-blue-color)', filter
                 '
             >
 
-                <p className='text-base font-semibold '>{t(chosenItem)}</p>
+                <p className='text-base font-semibold '>{t(chosenItem.label)}</p>
 
                 <IoIosArrowBack className={`text-xl duration-300 ${displayList ? '-rotate-90' : ''}`} />
 
@@ -80,9 +78,9 @@ export default function ListBtn({listData, color='var(--sky-blue-color)', filter
                             className={`
                                 w-full p-2.5 border-b border-solid border-[var(--sky-blue-color)] last:border-0 font-medium
                                 text-[var(--dark-blue-color)] text-center duration-300 hover:bg-[var(--sky-blue-color)] cursor-pointer
-                                ${chosenItem === item ? 'bg-[var(--sky-blue-color)]' : 'bg-[var(--white-color)]'}
+                                ${chosenItem.value === item.value ? 'bg-[var(--sky-blue-color)]' : 'bg-[var(--white-color)]'}
                             `}
-                        >{t(item)}</li>)}
+                        >{t(item.label)}</li>)}
 
                     </ul>
 

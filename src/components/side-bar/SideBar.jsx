@@ -13,6 +13,7 @@ import { CgCloseO } from 'react-icons/cg';
 // ====== import-images ====== //
 
 import logo from '../../assets/images/logo.png';
+import { MdOutlineAdminPanelSettings } from 'react-icons/md';
 
 export default function SideBar({setDisplayNav}) {
 
@@ -20,6 +21,7 @@ export default function SideBar({setDisplayNav}) {
 
         {icon: <GoHome/>, title: 'homeWord', path: ROUTES.HOME_ROUTE},
         {icon: <LuUsers/>, title: 'usersManageWord', path: ROUTES.USERS_ROUTE},
+        {icon: <MdOutlineAdminPanelSettings/>, title: 'adminsManageWord', path: ROUTES.ADMINS_ROUTE},
         {icon: <RiShoppingCartLine/>, title: 'ordersWord', path: ROUTES.ORDERS_ROUTE},
         {icon: <LuChartColumn/>, title: 'salesAnalysisWord', path: ROUTES.SALES_ANALYSIS_ROUTE},
         {icon: <PiStarHalfFill/>, title: 'ratesWord', path: ROUTES.RATES_ROUTE},

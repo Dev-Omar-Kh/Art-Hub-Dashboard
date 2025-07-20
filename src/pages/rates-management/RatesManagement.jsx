@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import MainTitle from '../../components/Titles/MainTitle'
 import { useTranslation } from 'react-i18next';
-import { PiExportBold } from 'react-icons/pi';
+import { PiExportBold, PiWarningOctagonBold } from 'react-icons/pi';
 import Table from '../../components/table/Table';
 import Numbers from '../../services/convertNum';
 import { GoStarFill } from 'react-icons/go';
@@ -12,6 +12,8 @@ import ListBtn from '../../components/buttons/ListBtn';
 import PopUp from '../../components/pop-up/PopUp';
 import { AnimatePresence } from 'framer-motion';
 import PopUpDescription from '../../components/pop-up/pop-up-box/PopUpDescription';
+import WarningBox from './../../components/pop-up/warning-box/WarningBox';
+import SearchInput from './../../components/inputs/search-input/SearchInput';
 
 const tableData = {
 
@@ -226,7 +228,12 @@ export default function RatesManagement() {
     const listButtonsData = [
         {
             id: 1,
-            data: ['allRatesWord', '5StarWord', '4StarWord', 'lessThan3StarWord'],
+            data: [
+                {value: 'allRatesWord', label: 'allRatesWord'}, 
+                {value: '5StarWord', label: '5StarWord'}, 
+                {value: '4StarWord', label: '4StarWord'}, 
+                {value: 'lessThan4StarWord', label: 'lessThan4StarWord'}
+            ],
             key: 'rate'
         },
     ];
@@ -238,8 +245,9 @@ export default function RatesManagement() {
     };
 
     const excludeValues = useMemo(() => ['allRatesWord'], []);
-    const {filteredData, setFilters} = useFilterAndSearch(
-        tableData.data, initialFilters, excludeValues
+    const searchKeys  = useMemo(() => ['title'], []);
+    const {filteredData, setFilters, setSearchText} = useFilterAndSearch(
+        tableData.data, initialFilters, excludeValues, searchKeys
     );
 
     // ====== handle-view-comment-button ====== //
@@ -252,19 +260,43 @@ export default function RatesManagement() {
         setRateMessage(msg);
     }
 
+    // ====== handle-delete-row ====== //
+
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleDeleteRow = () => {
+        setIsOpen(true);
+    }
+
     return <React.Fragment>
 
         <AnimatePresence>
-            {openCommentPopUp && <PopUp>
+            {openCommentPopUp && <PopUp onClose={() => setOpenCommentPopUp(false)}>
                 <PopUpDescription title={'commentWord'} msg={rateMessage} onClose={() => setOpenCommentPopUp(false)} />
             </PopUp>}
+
+            {isOpen && <PopUp onClose={() => setIsOpen(false)}>
+                <WarningBox 
+                    icon={<PiWarningOctagonBold />} 
+                    title={'deleteRateTitle'} msg={'deleteRateMsg'} 
+                    onClose={() => setIsOpen(false)}
+                />
+            </PopUp>}
+
         </AnimatePresence>
 
         <section className='w-full flex flex-col gap-10'>
 
             <MainTitle title={'ratesManageWord'} slogan={'ratesManagementPageSlogan'} buttons={usersButtons} />
 
-            <div className='w-full flex flex-wrap gap-5 items-center justify-end'>
+            <div className='w-full flex flex-wrap gap-5 items-center justify-between'>
+
+                <div className='w-sm'>
+                    <SearchInput 
+                        id={'orderSearch'} placeholder={'orderSearchWord'} 
+                        onSearch={(value) => setSearchText(value)}
+                    />
+                </div>
 
                 <div className='flex flex-wrap items-center gap-2.5'>
                     {listButtonsData.map((list, idx) => (
@@ -362,14 +394,14 @@ export default function RatesManagement() {
 
                         </React.Fragment>
                     )}
-                    onActionClick={(order) => (
+                    onActionClick={(rate) => (
                         <React.Fragment>
 
                             <div className='w-full flex items-center justify-center gap-2.5'>
 
                                 <button 
-                                    // onClick={() => handleBanClick(user)}
-                                    id={`banUser-${order.id}`}
+                                    onClick={() => handleDeleteRow(rate)}
+                                    id={`banUser-${rate.id}`}
                                     className='
                                             p-2.5 rounded-md bg-[var(--light-red-color)]
                                             text-[var(--red-color)] cursor-pointer duration-300

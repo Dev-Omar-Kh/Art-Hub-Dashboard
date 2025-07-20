@@ -10,8 +10,8 @@
     --black-color: #1f1f1fed;
     --light-black-color: #2D3748;
     --gray-color: #8E8E8E;
-    --mid-gray-color: #E2E8F0;
-    --light-gray-color: #F8F9FA;
+    /* --mid-gray-color: #E2E8F0;
+    --light-gray-color: #F8F9FA; */
     --green-color: #38A169;
     --light-green-color: #C6F6D5;
     --light-red-color: #FFE5E9;
@@ -29,7 +29,8 @@
     --light-mid-blue-color: rgba(193, 209, 230, 0.25);
     --shadow-black-color: rgba(31, 31, 31, 0.05);
     --mid-gray-color: rgba(142, 142, 142, 0.5);
-    --light-gray-color: rgba(142, 142, 142, 0.05);
+    --mid-light-gray-color: rgba(142, 142, 142, 0.25);
+    --light-gray-color: rgba(142, 142, 142, 0.09);
     --mid-green-color: rgba(56, 161, 105, 0.5);
     /* --light-green-color: rgba(56, 161, 105, 0.05); */
 
@@ -74,6 +75,14 @@ body{
 
 .hidden-scroll::-webkit-scrollbar{
     display: none;
+}
+
+.list-position {
+    top: calc(100% + 0.25rem);
+}
+
+.line-hight-14{
+    line-height: 14rem;
 }
 
 /* ====== responsive-design ====== */

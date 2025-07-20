@@ -3,17 +3,17 @@ import Numbers from '../../services/convertNum'
 import { useTranslation } from 'react-i18next'
 import CurrencyImage from '../currency/CurrencyImage';
 
-export default function ProfileAchieve({achieveData}) {
+export default function ProfileAchieve({achieveData, gridCols = 2}) {
 
     const {t, i18n} = useTranslation();
 
     return <React.Fragment>
 
         <div 
-            className='
-                grid grid-cols-2 gap-2.5 rounded-2xl max-[735px]:col-span-1
-                bg-[var(--white-color)] p-5 col-span-3 max-[480px]:grid-cols-1
-            '
+            className={`
+                grid ${gridCols === 2 ? 'grid-cols-2' : 'grid-cols-4'} gap-2.5 rounded-2xl max-[735px]:col-span-1
+                bg-[var(--white-color)] p-5 col-span-3 max-[1085px]:grid-cols-2 max-[480px]:grid-cols-1
+            `}
         >
 
             {achieveData.map((item) => (

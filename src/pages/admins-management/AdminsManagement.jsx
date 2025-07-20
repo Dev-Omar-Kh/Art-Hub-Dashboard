@@ -7,7 +7,7 @@ import Table from '../../components/table/Table';
 import { useTranslation } from 'react-i18next';
 import Numbers from '../../services/convertNum';
 import { Link } from 'react-router-dom';
-import { IoIosArrowForward } from 'react-icons/io';
+import { IoIosAddCircleOutline, IoIosArrowForward } from 'react-icons/io';
 import { IoBanSharp } from 'react-icons/io5';
 import { LuMessageSquareText } from 'react-icons/lu';
 import { ROUTES } from '../../constants/routes';
@@ -17,6 +17,7 @@ import { useFilterAndSearch } from '../../hooks/useFilterAndSearch';
 // ====== import-images ====== //
 
 import userPfp from '../../assets/images/artist.jpg';
+import { FiEdit } from 'react-icons/fi';
 import PopUp from './../../components/pop-up/PopUp';
 import WarningBox from '../../components/pop-up/warning-box/WarningBox';
 import { AnimatePresence } from 'framer-motion';
@@ -26,133 +27,141 @@ const tableData = {
     columns: ['nameWord', 'typeWord', 'emailWord', 'statusWord', 'joinDateWord', 'profileWord', 'actionsWord'],
 
     data: [
-
         {
-            "id": 1,
-            "userId": "12345678910",
-            "name": "عمر خالد محمد",
-            "email": "omar.2004@gmail.com",
-            "type": "artistWord",
-            "status": "activeWord",
-            "joinDate": "2023-01-15"
+            "_id": "6878e6893ef4f024984b2566",
+            "displayName": "أحمد محمد",
+            "email": "newadmin@example.com",
+            "role": "admin",
+            "isActive": true,
+            "createdAt": "2025-07-17T12:03:21.465Z",
+            "lastActive": "2025-07-17T12:31:59.453Z"
         },
 
         {
-            "id": 2,
-            "userId": "22345678911",
-            "name": "سارة احمد",
-            "email": "sara.ahmed@example.com",
-            "type": "clientWord",
-            "status": "bannedWord",
-            "joinDate": "2022-12-01"
+            "_id": "6878e62c75151acf7f3a4898",
+            "displayName": "مدير النظام 1",
+            "email": "hamz922003@gmail.com",
+            "role": "superadmin",
+            "isActive": true,
+            "createdAt": "2025-07-17T12:01:49.003Z",
+            "lastActive": "2025-07-18T13:28:01.863Z"
         },
 
         {
-            "id": 3,
-            "userId": "32345678912",
-            "name": "محمد ياسر",
-            "email": "m.yasser@example.com",
-            "type": "artistWord",
-            "status": "activeWord",
-            "joinDate": "2023-05-20"
+            "_id": "6878e6903ef4f024984b2567",
+            "displayName": "مروان عبد الله",
+            "email": "marwan@example.com",
+            "role": "admin",
+            "isActive": true,
+            "createdAt": "2025-07-16T10:10:10.100Z",
+            "lastActive": "2025-07-18T14:20:30.000Z"
         },
 
         {
-            "id": 4,
-            "userId": "42345678913",
-            "name": "ليلى ناصر",
-            "email": "laila.n@example.com",
-            "type": "clientWord",
-            "status": "bannedWord",
-            "joinDate": "2021-11-03"
+            "_id": "6878e6913ef4f024984b2568",
+            "displayName": "سارة مصطفى",
+            "email": "sara.m@example.com",
+            "role": "admin",
+            "isActive": true,
+            "createdAt": "2025-07-15T09:15:20.000Z",
+            "lastActive": "2025-07-18T12:10:00.000Z"
         },
 
         {
-            "id": 5,
-            "userId": "52345678914",
-            "name": "طارق سمير",
-            "email": "t.samir@example.com",
-            "type": "artistWord",
-            "status": "activeWord",
-            "joinDate": "2023-07-10"
+            "_id": "6878e6923ef4f024984b2569",
+            "displayName": "محمد أشرف",
+            "email": "ashraf.m@example.com",
+            "role": "superadmin",
+            "isActive": true,
+            "createdAt": "2025-07-12T14:25:40.000Z",
+            "lastActive": "2025-07-18T15:00:00.000Z"
         },
 
         {
-            "id": 6,
-            "userId": "62345678915",
-            "name": "هدى خليل",
-            "email": "h.khalil@example.com",
-            "type": "clientWord",
-            "status": "activeWord",
-            "joinDate": "2022-08-14"
+            "_id": "6878e6933ef4f024984b2570",
+            "displayName": "إيمان علي",
+            "email": "eman.ali@example.com",
+            "role": "admin",
+            "isActive": true,
+            "createdAt": "2025-07-10T08:45:30.000Z",
+            "lastActive": "2025-07-18T11:20:00.000Z"
         },
 
         {
-            "id": 7,
-            "userId": "72345678916",
-            "name": "خالد مصطفى",
-            "email": "k.mostafa@example.com",
-            "type": "artistWord",
-            "status": "bannedWord",
-            "joinDate": "2021-09-09"
+            "_id": "6878e6943ef4f024984b2571",
+            "displayName": "حسن عبد الكريم",
+            "email": "hassan.k@example.com",
+            "role": "superadmin",
+            "isActive": true,
+            "createdAt": "2025-07-09T07:00:00.000Z",
+            "lastActive": "2025-07-18T10:00:00.000Z"
         },
 
         {
-            "id": 8,
-            "userId": "82345678917",
-            "name": "منى عصام",
-            "email": "mona.essam@example.com",
-            "type": "clientWord",
-            "status": "activeWord",
-            "joinDate": "2023-03-18"
+            "_id": "6878e6953ef4f024984b2572",
+            "displayName": "ليلى حسن",
+            "email": "leila.h@example.com",
+            "role": "admin",
+            "isActive": true,
+            "createdAt": "2025-07-08T12:30:00.000Z",
+            "lastActive": "2025-07-18T16:15:00.000Z"
         },
 
         {
-            "id": 9,
-            "userId": "92345678918",
-            "name": "يوسف عمرو",
-            "email": "y.amr@example.com",
-            "type": "artistWord",
-            "status": "bannedWord",
-            "joinDate": "2022-06-22"
+            "_id": "6878e6963ef4f024984b2573",
+            "displayName": "كريم سعيد",
+            "email": "karim.s@example.com",
+            "role": "admin",
+            "isActive": true,
+            "createdAt": "2025-07-07T10:10:10.000Z",
+            "lastActive": "2025-07-18T13:45:00.000Z"
         },
 
         {
-            "id": 10,
-            "userId": "10345678919",
-            "name": "نور حسان",
-            "email": "n.hassan@example.com",
-            "type": "clientWord",
-            "status": "activeWord",
-            "joinDate": "2023-04-30"
+            "_id": "6878e6973ef4f024984b2574",
+            "displayName": "نجلاء محمود",
+            "email": "naglaa.m@example.com",
+            "role": "superadmin",
+            "isActive": true,
+            "createdAt": "2025-07-06T11:20:30.000Z",
+            "lastActive": "2025-07-18T14:30:00.000Z"
         }
-
     ]
+
 
 };
 
-export default function UsersManagement() {
+const usersButtons = [
+    {
+        id: 1, 
+        url: ROUTES.ADD_ADMIN_ROUTE,
+        title: 'addAdminWord', 
+        icon: <IoIosAddCircleOutline/>, 
+        color: 'var(--white-color)', 
+        bgColor: 'var(--dark-blue-color)'
+    },
+];
+
+export default function AdminsManagement() {
 
     const { t, i18n } = useTranslation();
 
-    const usersButtons = [
-        {id: 2, title: 'exportDataWord', icon: <PiExportBold/>, color: 'var(--white-color)', bgColor: 'var(--dark-blue-color)'},
-    ];
-
-    const uniqueRoles = [...new Set(tableData.data.map(user => user.type))];
-    const uniqueStatuses = [...new Set(tableData.data.map(user => user.status))];
+    const uniqueRoles = [...new Set(tableData.data.map(user => user.role))];
+    const uniqueStatuses = [...new Set(tableData.data.map(user => user.isActive))];
     const listButtonsData = [
 
         {
             id: 1,
             data: [
                 { value: 'allUsersWord', label: 'allUsersWord' },
-                ...uniqueRoles.map(type => ({
-                    value: type,
-                    label: type
+                ...uniqueRoles.map(role => ({
+                    value: role,
+                    label: role === 'admin' ? 'adminWord' : 
+                        role === 'superadmin' ? 'superadminWord' : 
+                        role
                 }))
             ],
-            key: 'type'
+            key: 'role'
         },
         {
             id: 2,
@@ -160,10 +169,10 @@ export default function UsersManagement() {
                 { value: 'allStatusWord', label: 'allStatusWord' },
                 ...uniqueStatuses.map(status => ({
                     value: status,
-                    label: status
-                }))
+                    label: status === true ? 'activeWord' : 'inactiveWord',
+                })),
             ],
-            key: 'status'
+            key: 'lastActive'
         }
 
     ];
@@ -176,19 +185,13 @@ export default function UsersManagement() {
     };
 
     const excludeValues = useMemo(() => ['allUsersWord', 'allStatusWord'], []);
-    const searchKeys  = useMemo(() => ['name', 'email'], []);
+    const searchKeys  = useMemo(() => ['displayName', 'email'], []);
     const {filteredData, setFilters, setSearchText} = useFilterAndSearch(
         tableData.data, initialFilters, excludeValues, searchKeys 
     );
 
-    // ====== profile-url ====== //
-
-    const profileId = (user) => {
-        return `${user.type === 'clientWord' ? ROUTES.CLIENT_PROFILE_ROUTE : ROUTES.ARTIST_PROFILE_ROUTE}/${user.userId}`
-    };
-
     // ====== handle-delete-row ====== //
-
+    
     const [isOpen, setIsOpen] = useState(false);
 
     const handleDeleteRow = () => {
@@ -201,7 +204,7 @@ export default function UsersManagement() {
             {isOpen && <PopUp onClose={() => setIsOpen(false)}>
                 <WarningBox 
                     icon={<PiWarningOctagonBold />} 
-                    title={'deleteUserTitle'} msg={'deleteUserMsg'} 
+                    title={'deleteAdminTitle'} msg={'deleteAdminMsg'} 
                     onClose={() => setIsOpen(false)}
                 />
             </PopUp>}
@@ -209,7 +212,7 @@ export default function UsersManagement() {
 
         <section className='w-full flex flex-col gap-10'>
 
-            <MainTitle title={'usersManageWord'} slogan={'userManagementPageSlogan'} buttons={usersButtons} />
+            <MainTitle title={'adminsManageWord'} slogan={'adminManagementPageSlogan'} buttons={usersButtons} />
 
             <div className='w-full flex flex-wrap gap-5 items-center justify-between'>
 
@@ -249,7 +252,7 @@ export default function UsersManagement() {
                                         '
                                         src={userPfp} alt={`${user.name} image`} loading='lazy' 
                                     />
-                                    <p>{user.name}</p>
+                                    <p>{user.displayName}</p>
                                 </div>
                             </td>
 
@@ -259,7 +262,11 @@ export default function UsersManagement() {
                                     border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
                                 `}
                             >
-                                <ElementBox title={user.type} bgColor={'var(--sky-blue-color)'} color={'var(--dark-blue-color)'} />
+                                <ElementBox 
+                                    title={user.role.toLowerCase() === 'admin' ? 'adminWord' : 'superadminWord'} 
+                                    bgColor={user.role.toLowerCase() === 'admin' ? 'var(--sky-blue-color)' : 'var(--mid-blue-color)'} 
+                                    color={'var(--dark-blue-color)'} 
+                                />
                             </td>
 
                             <td 
@@ -278,9 +285,9 @@ export default function UsersManagement() {
                                 `}
                             >
                                 <ElementBox 
-                                    title={user.status} 
-                                    color={user.status === 'bannedWord' ? 'var(--red-color)' : 'var(--green-color)'} 
-                                    bgColor={user.status === 'bannedWord' ? 'var(--light-red-color)' : 'var(--light-green-color)'} 
+                                    title={user.isActive ? 'activeWord' : 'bannedWord'} 
+                                    color={user.isActive === 'bannedWord' ? 'var(--red-color)' : 'var(--green-color)'} 
+                                    bgColor={user.isActive === 'bannedWord' ? 'var(--light-red-color)' : 'var(--light-green-color)'} 
                                 />
                             </td>
 
@@ -290,9 +297,9 @@ export default function UsersManagement() {
                                     border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
                                 `}
                             >
-                                {user.joinDate.split('-').map((item) => (
+                                {user.createdAt.split('T')[0].split('-').map((item) => (
                                     Numbers(item, i18n.language, true)
-                                )).reverse().join(' - ')}
+                                )).join(' - ')}
                             </td>
 
                             <td 
@@ -303,7 +310,7 @@ export default function UsersManagement() {
                             >
                                 <div className='flex items-center justify-center'>
                                     <Link 
-                                        to={profileId(user)}
+                                        to={`${ROUTES.ADMIN_ROUTE}/${user._id}`}
                                         className='
                                             px-2 py-1 flex items-center justify-center gap-1 cursor-pointer 
                                             text-[var(--dark-blue-color)] bg-[var(--mid-blue-color)] rounded-md
@@ -327,7 +334,7 @@ export default function UsersManagement() {
                                     text-[var(--dark-blue-color)] cursor-pointer duration-300
                                 '
                             >
-                                <LuMessageSquareText />
+                                <FiEdit />
                             </Link>
 
                             <button 

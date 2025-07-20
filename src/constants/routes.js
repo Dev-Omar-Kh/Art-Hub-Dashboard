@@ -23,4 +23,11 @@ export const ROUTES = {
     ORDERS_SETTING_ROUTE: 'orders-setting',
     PAYMENT_SETTING_ROUTE: 'payment-setting',
     POLICY_SETTING_ROUTE: 'policy-setting',
+    ARTIST_REPORTS_ROUTE: 'reports',
+    ARTIST_RATES_ROUTE: 'rates',
+    ARTIST_ACTIVITY_LOG_ROUTE: 'activity-log',
+    ADMINS_ROUTE: '/admins',
+    ADMIN_ROUTE: 'admin',
+    ADD_ADMIN_ROUTE: 'add-admin',
+
 }

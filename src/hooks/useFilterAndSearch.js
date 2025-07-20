@@ -19,7 +19,7 @@ export const useFilterAndSearch = (data, initialFilters = {}, excludeValues = []
                     result = result.filter(item => Math.floor(item.rate) === 5);
                 } else if (value === '4StarWord') {
                     result = result.filter(item => Math.floor(item.rate) === 4);
-                } else if (value === 'lessThan3StarWord') {
+                } else if (value === 'lessThan4StarWord') {
                     result = result.filter(item => Math.floor(item.rate) <= 3);
                 }
 

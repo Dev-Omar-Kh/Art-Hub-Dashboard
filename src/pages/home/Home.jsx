@@ -35,17 +35,25 @@ export default function Home() {
     // ====== analysis-card-data ====== //
 
     const rawFilterListData = ['last12MonthWord', 'last9MonthWord', 'last6MonthWord', 'last3MonthWord', 'lastMonthWord'];
+
     const localizedFilterListData = rawFilterListData.map((key) => {
 
         if (key === 'lastMonthWord') {
-            return t('lastMonthWord');
+            return {
+                label: t('lastMonthWord'),
+                value: 1,
+            };
         }
 
         const number = key.match(/\d+/)?.[0];
-        const localizedNumber = Numbers(number, i18n.language);
-        return t('lastXMonthWord', { count: localizedNumber });
+        const localizedNumber = Numbers(number, i18n.language); 
 
-    }); 
+        return {
+            label: t('lastXMonthWord', { count: localizedNumber }),
+            value: Number(number),
+        };
+
+    });
 
     const monthsTimeLineData = [
         t("janMonth"), t("febMonth"), t("marMonth"), t("aprMonth"), t("mayMonth"), t("junMonth"), 
@@ -57,7 +65,7 @@ export default function Home() {
         {
             id: 1,
             title: 'revenueStatistics',
-            filterListData: localizedFilterListData,
+            filterListData: {data:localizedFilterListData, key: 'months'},
             statisticsData: [
                 {id: 1, title: 'weeklyWord', value: '28900', color: 'var(--green-color)', isMoney: true},
                 {id: 2, title: 'monthlyWord', value: '124500', color: 'var(--green-color)', isMoney: true},
@@ -75,7 +83,7 @@ export default function Home() {
         {
             id: 2,
             title: 'orderStatistics',
-            filterListData: localizedFilterListData,
+            filterListData: {data:localizedFilterListData, key: 'months'},
             statisticsData: [
                 {id: 1, title: 'rejectedWord', value: '23', color: 'var(--red-color)', isMoney: false},
                 {id: 2, title: 'completedWord', value: '1243', color: 'var(--green-color)', isMoney: false},

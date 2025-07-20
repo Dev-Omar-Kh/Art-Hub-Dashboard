@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ListBtn from '../../../../../components/buttons/ListBtn';
 import { useFilterAndSearch } from '../../../../../hooks/useFilterAndSearch';
@@ -9,6 +9,10 @@ import { Link } from 'react-router-dom';
 import { IoBanSharp } from 'react-icons/io5';
 import { FiEdit } from 'react-icons/fi';
 import CurrencyImage from '../../../../../components/currency/CurrencyImage';
+import { AnimatePresence } from 'framer-motion';
+import PopUp from '../../../../../components/pop-up/PopUp';
+import WarningBox from '../../../../../components/pop-up/warning-box/WarningBox';
+import { PiWarningOctagonBold } from 'react-icons/pi';
 
 const ordersData = {
     columns: ['orderNumWord', 'theArtworkWord', 'theArtistWord', 'priceWord', 'dateWord', 'statusWord', 'actionsWord'],
@@ -27,9 +31,16 @@ export default function ClientOrders() {
 
     const {t, i18n} = useTranslation();
 
+    const uniqueStatuses = [...new Set(ordersData.data.map(order => order.status))]
     const listData = {
         id: 1,
-        data: ['allStatusWord', ...new Set(ordersData.data.map(order => order.status))],
+        data: [
+            { value: 'allStatusWord', label: 'allStatusWord' },
+            ...uniqueStatuses.map(status => ({
+                value: status,
+                label: status
+            }))
+        ],
         key: 'status'
     }
 
@@ -42,7 +53,25 @@ export default function ClientOrders() {
         ordersData.data, initialFilters, excludeValues
     );
 
+    // ====== handle-delete-row ====== //
+
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleDeleteRow = () => {
+        setIsOpen(true);
+    }
+
     return <React.Fragment>
+
+        <AnimatePresence>
+            {isOpen && <PopUp onClose={() => setIsOpen(false)}>
+                <WarningBox 
+                    icon={<PiWarningOctagonBold />} 
+                    title={'deleteOrderTitle'} msg={'deleteOrderMsg'} 
+                    onClose={() => setIsOpen(false)}
+                />
+            </PopUp>}
+        </AnimatePresence>
 
         <div className='w-full flex flex-col gap-5'>
 
@@ -135,18 +164,8 @@ export default function ClientOrders() {
                     onActionClick={(order) => (
                         <div className='w-full flex items-center justify-center gap-2.5'>
 
-                            <Link 
-                                to={`update-admin-data/${order.orderId}`} 
-                                className='
-                                    p-2.5 rounded-md bg-[var(--sky-blue-color)]
-                                    text-[var(--dark-blue-color)] cursor-pointer duration-300
-                                '
-                            >
-                                <FiEdit />
-                            </Link>
-
                             <button 
-                                // onClick={() => handleBanClick(order)}
+                                onClick={() => handleDeleteRow(order)}
                                 id={`banOrder-${order.id}`}
                                 className='
                                         p-2.5 rounded-md bg-[var(--light-red-color)]

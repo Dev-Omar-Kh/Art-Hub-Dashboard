@@ -2,16 +2,29 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import ListBtn from '../../../components/buttons/ListBtn';
 import Numbers from './../../../services/convertNum';
+import CurrencyImage from './../../../components/currency/CurrencyImage';
 
 export default function MostArtists({data}) {
 
     const {t, i18n} = useTranslation();
 
-    const yearsTimeLineData = [2025, 2024, 2023, 2022].map(num => Numbers(num, i18n.language, true));
+    const yearsTimeLineData = [2025, 2024, 2023, 2022].map(year => ({
+        label: Numbers(year, i18n.language, true),
+        value: Numbers(year, i18n.language, true),
+    }));
+
     const monthsTimeLineData = [
-        t("janMonth"), t("febMonth"), t("marMonth"), t("aprMonth"), t("mayMonth"), t("junMonth"), 
-        t("julMonth"), t("augMonth"), t("sepMonth"), t("octMonth"), t("novMonth"), t("decMonth")
-    ];
+        "janMonth", "febMonth", "marMonth", "aprMonth", "mayMonth", "junMonth",
+        "julMonth", "augMonth", "sepMonth", "octMonth", "novMonth", "decMonth"
+    ].map((key, index) => ({
+        label: t(key),
+        value: index + 1,
+    }));
+
+    const filtersData = [
+        {id: 1, data: yearsTimeLineData, key: 'year'},
+        {id: 2, data: monthsTimeLineData, key: 'month'},
+    ]
 
     return <React.Fragment>
 
@@ -23,9 +36,11 @@ export default function MostArtists({data}) {
 
                 <div className='flex items-center gap-2.5'>
 
-                    <ListBtn listData={monthsTimeLineData} />
-
-                    <ListBtn listData={yearsTimeLineData} />
+                    {filtersData.map(list => <ListBtn 
+                        listData={list.data}
+                        key={list.key}
+                        onFilterChange={() => console.log('tops')}
+                    />)}
 
                 </div>
 
@@ -78,9 +93,12 @@ export default function MostArtists({data}) {
 
                         {card.achievement.map((ach) => (
                             <div key={ach.id} className='flex flex-col items-center justify-center'>
-                                <p className='text-lg font-semibold text-[var(--dark-blue-color)]'>
+                                <p className='flex items-center gap-1 text-lg font-semibold text-[var(--dark-blue-color)]'>
                                     {Numbers(ach.value, i18n.language)} 
-                                    {ach.isMoney ? ' $' : ''}
+                                    {ach.isMoney && <CurrencyImage 
+                                        width={'w-4'}
+                                        color='blue'
+                                    />}
                                 </p>
                                 <p className='text-base text-[var(--gray-color)]'>{ach.title}</p>
                             </div>

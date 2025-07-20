@@ -1,7 +1,7 @@
 {
 
     "emailWord": "البريد الإلكتروني",
-    "emailPlaceHolder": "أدخل بريدك الإلكتروني",
+    "emailPlaceHolder": "أدخل البريد الإلكتروني",
     "passwordWord": "كلمة المرور",
     "passwordPlaceHolder": "أدخل كلمة المرور",
     "loginWord": "تسجيل الدخول",
@@ -72,8 +72,10 @@
     "allStatusWord": "كل الحالات",
     "activeWord": "نشط",
     "bannedWord": "محظور",
+    "onlineWord": "متصل",
+    "offlineWord": "غير متصل",
 
-    "nameWord": "الاسم",
+    "nameWord": "الإسم",
     "typeWord": "النوع",
     "statusWord": "الحالة",
     "joinDateWord": "تاريخ الانضمام",
@@ -96,6 +98,7 @@
 
     "lastOrdersWord": "آخر الطلبات",
     "theArtistWord": "الفنان",
+    "theClientWord": "العميل",
     "currencyWord": "ريال",
 
     "allClientOrders": "كل طلبات العميل",
@@ -146,7 +149,7 @@
     "allRatesWord": "جميع التقييمات",
     "5StarWord": "5 نجوم",
     "4StarWord": "4 نجوم",
-    "lessThan3StarWord": "أقل من 3 نجوم",
+    "lessThan4StarWord": "أقل من 4 نجوم",
 
     "reportsManageWord": "إدارة البلاغات",
     "reportsManagementPageSlogan": "إدارة وتنظيم بلاغات المستخدمين",
@@ -195,6 +198,73 @@
     "confirmNewPasswordWord": "تأكيد كلمة المرور",
     "confirmNewPasswordPlaceHolder": "أكد كلمة المرور الجديدة",
 
-    "updateWord": "تحديث"
+    "updateWord": "تحديث",
+
+    "aboutArtist": "نبذة عن الفنان",
+    "artistWorksWord": "أعمال الفنان",
+    "submittedReportsWord": "البلاغات المقدمة",
+    "totalCompletedOrdersWord": "الطلبات المكتملة",
+    "totalWorksWord": "إجمالي الأعمال",
+
+    "allArtistWorksWord": "كل أعمال الفنان",
+    "allReportsOnArtistWord": "كل البلاغات على الفنان",
+
+    "artistStatsWord": "إحصائيات الفنان",
+    "clientsRates": "تقييمات العملاء",
+
+    "allowArtistsRegisteringWord": "السماح بتسجيل الفنانين",
+    "allowArtistsRegisteringLabel": "السماح للفنانين الجدد بإنشاء حسابات على المنصة",
+    "allowUsersRegisteringWord": "السماح بتسجيل المستخدمين",
+    "allowUsersRegisteringLabel": "السماح للزوار بإنشاء حسابات جديدة",
+    "allowCreateOrdersWord": "السماح بإنشاء طلبات جديدة",
+    "allowCreateOrdersLabel": "السماح للعملاء بإنشاء طلبات جديدة",
+    "allowCreateReportsWord": "السماح بإنشاء بلاغات جديدة",
+    "allowCreateReportsLabel": "السماح للعملاء بإنشاء بلاغات جديدة",
+
+    "paymentInfoWord": "معلومات حساب الدفع",
+    "choosePaymentMethodWord": "إختر طريقة الدفع",
+    "paymentInfoPlaceHolder": "أدخل معلومات حساب الدفع",
+    "choosePaymentMethodPlaceholder": "أدخل طريقة الدفع المناسبة",
+
+    "privacyPolicyLinkWord": "رابط سياسة الخصوصية",
+    "privacyPolicyLinkPlaceholder": "أدخل رابط ملف سياسة الخصوصية",
+    "termsAndConditionsLinkWord": "رابط الشروط والأحكام",
+    "termsAndConditionsLinkPlaceholder": "أدخل رابط ملف الشروط والأحكام",
+
+    "saveChangesWord": "حفظ التغييرات",
+
+    "adminsManageWord": "إدارة المشرفين",
+    "adminManagementPageSlogan": "إدارة وتنظيم حسابات المشرفين",
+    "addAdminWord": "إضافة مشرف",
+
+    "adminWord": "مشرف",
+    "superadminWord": "مشرف أعلى",
+
+    "editDataWord": "تعديل البيانات",
+    "adminProfileWord": "ملف المشرف",
+    "adminProfileSlogan": "ملف تعريفي للمشرف",
+
+    "addAdminSlogan": "أضف مشرف جديد للوحة التحكم",
+
+    "addImageWord": "أضف صورة",
+    "namePlaceHolder": "أدخل الإسم",
+    "confirmPasswordWord": "تأكيد كلمة المرور",
+    "confirmPasswordPlaceHolder": "أكد كلمة المرور",
+    "addWord": "إضافة",
+
+    "deleteUserTitle": "حذف المستخدم",
+    "deleteUserMsg": "هل أنت متأكد أنك تريد حذف هذا المستخدم؟ لا يمكن التراجع عن هذا الإجراء.",
+    "deleteAdminTitle": "حذف المشرف",
+    "deleteAdminMsg": "هل أنت متأكد أنك تريد حذف هذا المشرف؟ لا يمكن التراجع عن هذا الإجراء.",
+    "deleteOrderTitle": "حذف الطلب",
+    "deleteOrderMsg": "هل أنت متأكد أنك تريد حذف هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.",
+    "deleteRateTitle": "حذف التقييم",
+    "deleteRateMsg": "هل أنت متأكد أنك تريد حذف هذا التقييم؟ لا يمكن التراجع عن هذا الإجراء.",
+    "deleteReportTitle": "حذف البلاغ",
+    "deleteReportMsg": "هل أنت متأكد أنك تريد حذف هذا البلاغ؟ لا يمكن التراجع عن هذا الإجراء.",
+    "confirmWord": "تأكيد",
+
+    "pageNoteFoundMsg": "هذه الصفحة غير موجودة او تمت إزالتها",
+    "goBackWord": "العودة للخلف"
 
 }
