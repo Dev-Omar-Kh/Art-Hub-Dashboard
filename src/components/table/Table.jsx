@@ -1,7 +1,11 @@
-import React from 'react'
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import TableLoading from './table-status/TableLoading';
+import TableError from './table-status/TableError';
+import wrongIcon from '../../assets/jsons/wrong.json';
+import warningIcon from '../../assets/jsons/warning.json';
 
-export default function Table({columns, data, renderRow, onActionClick, actions, tHeadColor}) {
+export default function Table({columns, data, renderRow, onActionClick, actions, tHeadColor, isLoading, isError, emptyMsg}) {
 
     const { t, i18n } = useTranslation();
 
@@ -34,7 +38,10 @@ export default function Table({columns, data, renderRow, onActionClick, actions,
 
                 <tbody>
 
-                    {data.map((item, index) => (
+                    {isLoading && <TableLoading />}
+                    {!isLoading && isError && <TableError isRed={true} icon={wrongIcon} msg={t('errorFetchMessage')} />}
+
+                    {!isLoading && !isError && data && data.length > 0 && (data?.map((item, index) => (
 
                         <tr
                             key={index}
@@ -58,7 +65,11 @@ export default function Table({columns, data, renderRow, onActionClick, actions,
 
                         </tr>
 
-                    ))}
+                    )))}
+
+                    {!isLoading && !isError && data && data.length === 0 && (
+                        <TableError isRed={false} icon={warningIcon} msg={emptyMsg} />
+                    )}
 
                 </tbody>
 

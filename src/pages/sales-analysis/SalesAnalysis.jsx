@@ -1,12 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { LuCloudDownload } from 'react-icons/lu';
 import MainTitle from '../../components/Titles/MainTitle';
 import StatisticsCard from '../../components/statistics-card/StatisticsCard';
 import { useTranslation } from 'react-i18next';
-import Numbers from '../../services/convertNum';
+import Numbers from '../../hooks/useConvertNumber';
 import ListBtn from '../../components/buttons/ListBtn';
 import LineChart from '../../components/charts/LineChart';
 import BestSellers from './best-sellers/BestSellers';
+import { useFetchQuery } from '../../hooks/useFetchQuery';
+import { endpoints } from '../../constants/endPoints';
+import StatisticsLoading from '../../components/statistics-card/StatisticsLoading';
+import FetchError from '../../components/error/FetchError';
 
 export default function SalesAnalysis() {
 
@@ -21,36 +25,88 @@ export default function SalesAnalysis() {
 
     // ====== statistics-data ====== //
 
+    const statisticsRes = useFetchQuery("SalesStatistics", endpoints.salesAnalysis.getStatistics);
+
+    const stats = statisticsRes?.data?.data;
     const statisticsData = [
 
-        {id: 1, title: 'totalSalesWord', value: '12847', isMoney: true, isString: false, percentageChange: '12', status: 'up', color: 'green'},
-        {id: 2, title: 'ordersCountWord', value: '168', isMoney: false, isString: false, percentageChange: '8', color: 'red'},
-        {id: 3, title: 'mostArtistSellerWord', value: 'أحمد محمد', isMoney: false, isString: true, msg: '125000', color: 'green'},
+        {
+            id: 1, 
+            title: 'totalSalesWord', 
+            value: stats?.totalSales.value, 
+            isMoney: true, 
+            isString: false, 
+            percentageChange: stats?.totalSales.percentageChange, 
+            status: stats?.totalSales.isPositive ? 'up' : 'down', 
+            color: stats?.totalSales.isPositive ? 'green' : 'red'
+        },
+
+        {
+            id: 2, 
+            title: 'ordersCountWord', 
+            value: stats?.totalOrders.value, 
+            isMoney: false, 
+            isString: false, 
+            percentageChange: stats?.totalOrders.percentageChange, 
+            status: stats?.totalOrders.isPositive ? 'up' : 'down', 
+            color: stats?.totalOrders.isPositive ? 'green' : 'red'
+        },
+
+        {
+            id: 3, 
+            title: 'mostArtistSellerWord', 
+            value: stats?.topSellingArtist ? stats?.topSellingArtist.name : t('noDataWord'), 
+            isMoney: false, 
+            isString: true, 
+            msg: stats?.topSellingArtist ? stats?.topSellingArtist.value : 0, 
+            color: 'green'
+        },
 
     ];
 
-    // ====== filter-data ====== //
+    // ====== chart-data ====== //
 
-    const rawFilterListData = ['last12MonthWord', 'last9MonthWord', 'last6MonthWord', 'last3MonthWord', 'lastMonthWord'];
+    const [period, setPeriod] = useState({months: '12months'});
+    const analysisRes = useFetchQuery(
+        ["salesAnalysis", period.months], 
+        `${endpoints.salesAnalysis.trendData}?period=${period.months}`
+    );
+
+    const rawFilterListData = ['last12MonthWord', 'last9MonthWord', 'last6MonthWord', 'last3MonthWord'];
     const localizedFilterListData = rawFilterListData.map((key) => {
 
         if (key === 'lastMonthWord') {
-            return t('lastMonthWord');
+            return {
+                label: t('lastMonthWord'),
+                value: '1month',
+            };
         }
 
         const number = key.match(/\d+/)?.[0];
-        const localizedNumber = Numbers(number, i18n.language);
-        return t('lastXMonthWord', { count: localizedNumber });
+        const localizedNumber = Numbers(number, i18n.language); 
 
-    }); 
+        return {
+            label: t('lastXMonthWord', { count: localizedNumber }),
+            value: `${number}months`,
+        };
 
-    // ====== chart-data ====== //
+    });
+    const filterListData = { data: localizedFilterListData, key: 'months' }
 
-    const timeLineData = [
-        t("janMonth"), t("febMonth"), t("marMonth"), t("aprMonth"), t("mayMonth"), t("junMonth"), 
-        t("julMonth"), t("augMonth"), t("sepMonth"), t("octMonth"), t("novMonth"), t("decMonth")
-    ].reverse();
-    const valuesData = [50, 80, 110, 75, 60, 100, 200, 175, 220, 57, 279, 240]
+    const chartProps = {
+        lineColor: '--mid-blue-color',
+        startColor: '--mid-mid-blue-color',
+        endColor: '--light-mid-blue-color',
+        timeLineData: analysisRes?.data?.data?.chartData?.map(time => time.month),
+        valuesData: analysisRes?.data?.data?.chartData?.map(data => data.sales),
+    }
+
+    // ====== top-artists-data ====== //
+
+    const topArtistsRes = useFetchQuery("topSellers", endpoints.salesAnalysis.topArtists);
+
+    console.log(topArtistsRes.data?.data?.artists);
+    
 
     return <React.Fragment>
 
@@ -58,32 +114,57 @@ export default function SalesAnalysis() {
 
             <MainTitle title={'salesAnalysisWord'} slogan={'salesAnalysisPageSlogan'} buttons={salesAnalysisButtons} />
 
-            <div className='w-full grid grid-cols-3 gap-5 max-[720px]:grid-cols-1'>
+            {statisticsRes.isError && analysisRes.isError && topArtistsRes.isError && <FetchError className='w-full h-full' />}
 
-                {statisticsData.map(stat => <StatisticsCard key={stat.id} data={stat} />)}
+            {!statisticsRes.isError && !analysisRes.isError && !topArtistsRes.isError && <React.Fragment>
 
-            </div>
+                { statisticsRes.isError && <FetchError className='w-full h-fit' />}
+                {!statisticsRes.isError && <div className='w-full grid grid-cols-3 gap-5 max-[720px]:grid-cols-1'>
 
-            <div 
-                className='p-5 rounded-2xl bg-[var(--white-color)] flex flex-col gap-5 shadow-[0_0px_10px_var(--shadow-black-color)]'
-            >
+                    {statisticsRes.isPending && Array.from({length: 3}, (_, idx) => (
+                        <StatisticsLoading key={idx} />
+                    ))}
 
-                <div className='w-full flex items-center justify-between gap-5'>
+                    {statisticsRes.data && statisticsData.map(stat => <StatisticsCard key={stat.id} data={stat} />)}
 
-                    <h3 className='text-lg font-semibold text-[var(--dark-blue-color)]'>{t('trackSalesWord')}</h3>
+                </div>}
 
-                    <ListBtn listData={localizedFilterListData} />
+                {analysisRes.isError && <FetchError className='w-full h-fit' />}
+                {!analysisRes.isError && <div 
+                    className='
+                        relative p-5 rounded-2xl bg-[var(--white-color)] flex flex-col gap-5 
+                        shadow-[0_0px_10px_var(--shadow-black-color)] overflow-hidden
+                    '
+                >
 
-                </div>
+                    {analysisRes.isPending && <div className='absolute top-0 left-0 w-full h-full bg-[var(--white-color)] z-10 opacity-50'>
+                        
+                    </div>}
 
-                <LineChart valuesData={valuesData}
-                    lineColor={'--mid-blue-color'} timeLineData={timeLineData} 
-                    startColor={'--mid-mid-blue-color'} endColor={'--light-mid-blue-color'} 
+                    <div className='w-full flex items-center justify-between gap-5'>
+
+                        <h3 className='text-lg font-semibold text-[var(--dark-blue-color)]'>{t('trackSalesWord')}</h3>
+
+                        <ListBtn listData={filterListData.data} 
+                            filterKey={filterListData.key}
+                            onFilterChange={(key, value) => setPeriod(prev => ({ ...prev, [key]: value }))}
+                        />
+
+                    </div>
+
+                    <LineChart valuesData={chartProps.valuesData}
+                        lineColor={chartProps.lineColor} timeLineData={chartProps.timeLineData} 
+                        startColor={chartProps.startColor} endColor={chartProps.endColor} 
+                    />
+
+                </div>}
+
+                <BestSellers 
+                    data={topArtistsRes.data?.data?.artists} 
+                    isLoading={topArtistsRes.isPending} isError={topArtistsRes.isError} 
                 />
 
-            </div>
-
-            <BestSellers />
+            </React.Fragment>}
 
         </section>
 

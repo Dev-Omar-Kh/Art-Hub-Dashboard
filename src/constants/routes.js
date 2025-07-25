@@ -29,5 +29,6 @@ export const ROUTES = {
     ADMINS_ROUTE: '/admins',
     ADMIN_ROUTE: 'admin',
     ADD_ADMIN_ROUTE: 'add-admin',
+    EDIT_ADMIN_ROUTE: 'edit-admin',
 
 }

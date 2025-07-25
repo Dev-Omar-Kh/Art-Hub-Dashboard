@@ -1,6 +1,6 @@
 import React from 'react'
 import ElementBox from '../../../../../components/elements-box/ElementBox'
-import Numbers from '../../../../../services/convertNum';
+import Numbers from '../../../../../hooks/useConvertNumber';
 import { useTranslation } from 'react-i18next'
 
 export default function ClientLog() {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next';
-import Numbers from '../../../../../services/convertNum';
+import Numbers from '../../../../../hooks/useConvertNumber';
 import ElementBox from '../../../../../components/elements-box/ElementBox';
 import ArtCard from '../../../../../components/cards/ArtCard';
 import StarRating from '../../../../../components/star-rating/StarRating';

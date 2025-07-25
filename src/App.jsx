@@ -5,6 +5,8 @@ import useLocalStorage from './hooks/useLocalStorage';
 import { ROUTES } from './constants/routes';
 import SubLayout from './layouts/SubLayout';
 import ErrorPage from './pages/error/ErrorPage.jsx';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import RoleProtectedRoute from './routes/RoleProtectedRoute.jsx';
 
 const Home = React.lazy(() => import('./pages/home/Home'));
 const MainLayout = React.lazy(() => import('./layouts/MainLayout'));
@@ -38,54 +40,73 @@ const ArtistReports = React.lazy(() => import('./pages/users-management/profiles
 
 const routes = createHashRouter([
 
-    {path: ROUTES.HOME_ROUTE, element: <MainLayout />, children: [
+    {
+        path: ROUTES.HOME_ROUTE, 
+        element: <RoleProtectedRoute allowedRoles={['admin', 'superadmin']} redirectTo={ROUTES.LOGIN_ROUTE}>
+            <MainLayout />
+        </RoleProtectedRoute>, 
+        children: [
 
-        {path: ROUTES.HOME_ROUTE, element: <Home />},
+            {path: ROUTES.HOME_ROUTE, element: <Home />},
 
-        {path: ROUTES.USERS_ROUTE, element: <SubLayout />, children: [
-            {path: ROUTES.USERS_ROUTE, element: <UsersManagement />},
+            {path: ROUTES.USERS_ROUTE, element: <SubLayout />, children: [
+                {path: ROUTES.USERS_ROUTE, element: <UsersManagement />},
 
-            {path: `${ROUTES.ARTIST_PROFILE_ROUTE}/:id`, element: <ArtistProfile />, children: [
-                {index: true, element: <ArtistWorks />},
-                {path: ROUTES.ARTIST_REPORTS_ROUTE, element: <ArtistReports />},
-                {path: ROUTES.ARTIST_RATES_ROUTE, element: <ArtistRates />},
-                {path: ROUTES.ARTIST_ACTIVITY_LOG_ROUTE, element: <ArtistLogs />},
+                {path: `${ROUTES.ARTIST_PROFILE_ROUTE}/:id`, element: <ArtistProfile />, children: [
+                    {index: true, element: <ArtistWorks />},
+                    {path: ROUTES.ARTIST_REPORTS_ROUTE, element: <ArtistReports />},
+                    {path: ROUTES.ARTIST_RATES_ROUTE, element: <ArtistRates />},
+                    {path: ROUTES.ARTIST_ACTIVITY_LOG_ROUTE, element: <ArtistLogs />},
+                ]},
+
+                {path: `${ROUTES.CLIENT_PROFILE_ROUTE}/:id`, element: <ClientProfile />, children: [
+
+                    {index: true, element: <OverView />},
+                    {path: ROUTES.CLIENT_ORDERS_ROUTE, element: <ClientOrders />},
+                    {path: ROUTES.CLIENT_RATES_ROUTE, element: <ClientRates />},
+                    {path: ROUTES.CLIENT_ACTIVITY_LOG_ROUTE, element: <ClientLog />},
+
+                ]},
+
+                {path: `${ROUTES.SEND_MESSAGE_ROUTE}/:id`, element: <MessageForm />},
             ]},
 
-            {path: `${ROUTES.CLIENT_PROFILE_ROUTE}/:id`, element: <ClientProfile />, children: [
+            {
+                path: ROUTES.ADMINS_ROUTE, 
+                element: <RoleProtectedRoute allowedRoles={['superadmin']} redirectTo={ROUTES.LOGIN_ROUTE}>
+                    <SubLayout />
+                </RoleProtectedRoute>, 
+                children: [
+                    {index: true, element: <AdminsManagement />},
+                    {path: `${ROUTES.ADMIN_ROUTE}/:id`, element: <AdminProfile />},
+                    {path: ROUTES.ADD_ADMIN_ROUTE, element: <AddAdmin />},
+                    {path: `${ROUTES.EDIT_ADMIN_ROUTE}/:id`, element: <AddAdmin />},
+                ]
+            },
 
-                {index: true, element: <OverView />},
-                {path: ROUTES.CLIENT_ORDERS_ROUTE, element: <ClientOrders />},
-                {path: ROUTES.CLIENT_RATES_ROUTE, element: <ClientRates />},
-                {path: ROUTES.CLIENT_ACTIVITY_LOG_ROUTE, element: <ClientLog />},
+            {path: ROUTES.ORDERS_ROUTE, element: <OrdersManagement />},
+            {path: ROUTES.SALES_ANALYSIS_ROUTE, element: <SalesAnalysis />},
+            {path: ROUTES.RATES_ROUTE, element: <RatesManagement />},
+            {path: ROUTES.REPORTS_ROUTE, element: <Reports />},
 
+            {path: ROUTES.SETTINGS_ROUTE, element: <Settings />, children: [
+                {index: true, element: <AccountSetting />},
+                {path: ROUTES.USERS_SETTING_ROUTE, element: <UsersSetting />},
+                {path: ROUTES.ORDERS_SETTING_ROUTE, element: <OrdersSetting />},
+                {path: ROUTES.PAYMENT_SETTING_ROUTE, element: <PaymentSetting />},
+                {path: ROUTES.POLICY_SETTING_ROUTE, element: <PolicySetting />},
             ]},
 
-            {path: `${ROUTES.SEND_MESSAGE_ROUTE}/:id`, element: <MessageForm />},
-        ]},
+        ], 
+        errorElement: <ErrorPage />
+    },
 
-        {path: ROUTES.ADMINS_ROUTE, element: <SubLayout />, children: [
-            {index: true, element: <AdminsManagement />},
-            {path: `${ROUTES.ADMIN_ROUTE}/:id`, element: <AdminProfile />},
-            {path: ROUTES.ADD_ADMIN_ROUTE, element: <AddAdmin />}
-        ]},
+    {
+        path: ROUTES.LOGIN_ROUTE, 
+        element: <RoleProtectedRoute redirectTo={ROUTES.HOME_ROUTE} requireAuth={false}><Login /></RoleProtectedRoute>, 
+        errorElement: <ErrorPage />
+    },
 
-        {path: ROUTES.ORDERS_ROUTE, element: <OrdersManagement />},
-        {path: ROUTES.SALES_ANALYSIS_ROUTE, element: <SalesAnalysis />},
-        {path: ROUTES.RATES_ROUTE, element: <RatesManagement />},
-        {path: ROUTES.REPORTS_ROUTE, element: <Reports />},
-
-        {path: ROUTES.SETTINGS_ROUTE, element: <Settings />, children: [
-            {index: true, element: <AccountSetting />},
-            {path: ROUTES.USERS_SETTING_ROUTE, element: <UsersSetting />},
-            {path: ROUTES.ORDERS_SETTING_ROUTE, element: <OrdersSetting />},
-            {path: ROUTES.PAYMENT_SETTING_ROUTE, element: <PaymentSetting />},
-            {path: ROUTES.POLICY_SETTING_ROUTE, element: <PolicySetting />},
-        ]},
-
-    ], errorElement: <ErrorPage />},
-
-    {path: ROUTES.LOGIN_ROUTE, element: <Login />, errorElement: <ErrorPage />},
     {path: '*', element: <ErrorPage />},
 
 ]);
@@ -93,6 +114,8 @@ const routes = createHashRouter([
 export default function App() {
 
     const { i18n } = useTranslation();
+    const queryClient = new QueryClient();
+
     const [savedLang] = useLocalStorage('language', 'ar');
 
     useEffect(() => {
@@ -120,9 +143,11 @@ export default function App() {
 
     return <React.Fragment>
 
-        <Suspense fallback={<Loading />}>
-            <RouterProvider router={routes} />
-        </Suspense>
+        <QueryClientProvider client={queryClient}>
+            <Suspense fallback={<Loading />}>
+                <RouterProvider router={routes} />
+            </Suspense>
+        </QueryClientProvider>
 
     </React.Fragment>
 

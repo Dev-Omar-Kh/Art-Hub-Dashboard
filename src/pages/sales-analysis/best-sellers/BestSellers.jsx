@@ -5,7 +5,7 @@ import Table from '../../../components/table/Table';
 // ====== import-images ====== //
 
 import userPfp from '../../../assets/images/artist.jpg';
-import Numbers from '../../../services/convertNum';
+import Numbers from '../../../hooks/useConvertNumber';
 import { IoArrowUpOutline } from 'react-icons/io5';
 import { IoIosArrowForward } from 'react-icons/io';
 import { Link } from 'react-router-dom';
@@ -13,7 +13,7 @@ import { HiArrowTrendingDown, HiArrowTrendingUp } from 'react-icons/hi2';
 
 const tableData = {
 
-    columns: ['#', 'artistWord', 'artistTypeWord', 'orderCountWord', 'sealsCountWord', 'growthWord', 'profileWord'],
+    columns: ['artistWord', 'artistTypeWord', 'orderCountWord', 'sealsCountWord', 'growthWord', 'profileWord'],
 
     data: [
 
@@ -171,7 +171,7 @@ const tableData = {
 
 }
 
-export default function BestSellers() {
+export default function BestSellers({data, isLoading, isError}) {
 
     const {t, i18n} = useTranslation();
 
@@ -183,22 +183,15 @@ export default function BestSellers() {
 
             <div className='w-full rounded-2xl overflow-hidden'>
 
-                <Table data={tableData.data}
+                <Table data={data}
                     columns={tableData.columns}
+                    isLoading={isLoading} isError={isError}
+                    emptyMsg={'noArtistsDataWord'}
                     actions={false} tHeadColor={'var(--light-gray-color)'}
                     renderRow={(artist) => (
                         <React.Fragment>
 
                             <td className='p-2.5 whitespace-nowrap'>
-                                {`${Numbers(artist.id, i18n.language, true)} #`}
-                            </td>
-
-                            <td 
-                                className={`
-                                    ${i18n.language === 'en' ? 'border-l' : 'border-r'} 
-                                    border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
-                                `}
-                            >
                                 <div className='w-fit flex items-center gap-2.5'>
                                     <img
                                         className='
@@ -207,7 +200,7 @@ export default function BestSellers() {
                                         '
                                         src={userPfp} alt={`${artist.artist} image`} loading='lazy' 
                                     />
-                                    <p>{artist.artist}</p>
+                                    <p>{artist.name}</p>
                                 </div>
                             </td>
 
@@ -217,7 +210,7 @@ export default function BestSellers() {
                                     border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
                                 `}
                             >
-                                {artist.artistType}
+                                {artist.job}
                             </td>
 
                             <td 
@@ -226,7 +219,7 @@ export default function BestSellers() {
                                     border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
                                 `}
                             >
-                                {Numbers(artist.orderCount, i18n.language)}
+                                {Numbers(artist.orders, i18n.language)}
                             </td>
 
                             <td 
@@ -235,7 +228,7 @@ export default function BestSellers() {
                                     border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
                                 `}
                             >
-                                {Numbers(artist.sealsCount, i18n.language)}
+                                {Numbers(artist.sales, i18n.language)}
                             </td>
 
                             <td 
@@ -245,17 +238,17 @@ export default function BestSellers() {
                                 `}
                             >
                                 <div className='w-full flex items-center justify-center gap-1'>
-                                    {artist.isUp 
+                                    {artist.growth.isPositive 
                                         ? <HiArrowTrendingUp className='text-xl text-[var(--green-color)]' /> 
                                         : <HiArrowTrendingDown className='text-xl text-[var(--red-color)]' />
                                     }
                                     <p 
                                         className={`
                                             text-base font-medium 
-                                            ${artist.isUp ? 'text-[var(--green-color)]' : 'text-[var(--red-color)]'}
+                                            ${artist.growth.isPositive ? 'text-[var(--green-color)]' : 'text-[var(--red-color)]'}
                                         `}
                                         >
-                                        {`${artist.isUp ? '+' : '-'}${Numbers(artist.growth, i18n.language)}`}
+                                        {`${artist.growth.isPositive ? '+' : '-'}${Numbers(artist.growth.sales, i18n.language)}`}
                                     </p>
                                 </div>
                             </td>

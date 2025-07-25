@@ -7,25 +7,26 @@ export const useFilterAndSearch = (data, initialFilters = {}, excludeValues = []
 
     useEffect(() => {
 
-        let result = [...data];
+        let result;
+        if(data) result = [...data];
 
         Object.entries(filters).forEach(([key, value]) => {
 
             if (excludeValues.includes(value)) return;
 
-            if (key === 'rate') {
+            if (key === 'rating') {
 
                 if (value === '5StarWord') {
-                    result = result.filter(item => Math.floor(item.rate) === 5);
+                    result = result.filter(item => Math.floor(item.rating) === 5);
                 } else if (value === '4StarWord') {
-                    result = result.filter(item => Math.floor(item.rate) === 4);
+                    result = result.filter(item => Math.floor(item.rating) === 4);
                 } else if (value === 'lessThan4StarWord') {
-                    result = result.filter(item => Math.floor(item.rate) <= 3);
+                    result = result.filter(item => Math.floor(item.rating) <= 3);
                 }
 
             }
             else {
-                result = result.filter(item => item[key] === value);
+                result = result?.filter(item => item[key] === value);
             }
 
         });

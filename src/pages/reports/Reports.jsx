@@ -1,10 +1,10 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { IoBanSharp } from 'react-icons/io5';
-import { PiExportBold, PiWarningOctagonBold } from 'react-icons/pi';
+import { PiWarningOctagonBold } from 'react-icons/pi';
 import MainTitle from '../../components/Titles/MainTitle';
 import Table from '../../components/table/Table';
-import Numbers from '../../services/convertNum';
+import Numbers from '../../hooks/useConvertNumber';
 import { IoIosArrowForward } from 'react-icons/io';
 import ElementBox from '../../components/elements-box/ElementBox';
 import { useFilterAndSearch } from '../../hooks/useFilterAndSearch';
@@ -13,179 +13,40 @@ import ListBtn from '../../components/buttons/ListBtn';
 import PopUp from '../../components/pop-up/PopUp';
 import { AnimatePresence } from 'framer-motion';
 import PopUpDescription from '../../components/pop-up/pop-up-box/PopUpDescription';
-import WarningBox from '../../components/pop-up/warning-box/WarningBox';
+import { useFetchQuery } from '../../hooks/useFetchQuery';
+import { endpoints } from '../../constants/endPoints';
+import PaginationList from '../../components/pagination-list/PaginationList';
+import DeleteOperation from '../../components/delete-operation/DeleteOperation';
+import ExploreDataBtn from '../../components/explore-data/ExploreDataBtn';
 
 const tableData = {
-
-    columns: ['#', 'complainantWord', 'artistWord', 'reportTypeWord', 'dateWord', 'reportDescriptionWord', 'statusWord', 'actionsWord'],
-
-    data: [
-
-        {
-            id: 1,
-            complainant: 'منى سالم',
-            artist: 'احمد محمد',
-            reportType: 'تأخير في التسليم',
-            description: 'اللوحة وصلت متأخرة جدًا عن الموعد المتفق عليه.',
-            date: '20-1-2025',
-            status: 'pendingWord'
-        },
-
-        {
-            id: 2,
-            complainant: 'ياسر فؤاد',
-            artist: 'عمر خالد',
-            reportType: 'جودة منخفضة',
-            description: 'الخامة والجودة لا تتناسب مع السعر.',
-            date: '12-11-2024',
-            status: 'reviewedWord'
-        },
-
-        {
-            id: 3,
-            complainant: 'هدى إبراهيم',
-            artist: 'ليلى علي',
-            reportType: 'تواصل غير متاح',
-            description: 'لم يتم الرد على استفساراتي أثناء التنفيذ.',
-            date: '6-2-2025',
-            status: 'resolvedWord'
-        },
-
-        {
-            id: 4,
-            complainant: 'زياد محسن',
-            artist: 'سارة محمود',
-            reportType: 'خدش في العمل',
-            description: 'اللوحة تعرضت لتلف أثناء الشحن.',
-            date: '23-3-2025',
-            status: 'pendingWord'
-        },
-
-        {
-            id: 5,
-            complainant: 'ريهام عبد الله',
-            artist: 'محمود حسن',
-            reportType: 'ألوان غير مطابقة',
-            description: 'الألوان المستخدمة لا تطابق النموذج المرسل.',
-            date: '18-4-2025',
-            status: 'rejectedWord'
-        },
-
-        {
-            id: 6,
-            complainant: 'عماد مصطفى',
-            artist: 'نورا إبراهيم',
-            reportType: 'جودة منخفضة',
-            description: 'تفاصيل العمل غير دقيقة والنتيجة غير مرضية.',
-            date: '10-5-2025',
-            status: 'reviewedWord'
-        },
-
-        {
-            id: 7,
-            complainant: 'مروان خليل',
-            artist: 'كريم مصطفى',
-            reportType: 'تأخير في التسليم',
-            description: 'تم تجاوز تاريخ التسليم دون إشعار.',
-            date: '3-6-2025',
-            status: 'resolvedWord'
-        },
-
-        {
-            id: 8,
-            complainant: 'شهد مجدي',
-            artist: 'هدى عصام',
-            reportType: 'مقاس غير صحيح',
-            description: 'اللوحة أصغر بكثير من المطلوب.',
-            date: '13-6-2025',
-            status: 'pendingWord'
-        },
-
-        {
-            id: 9,
-            complainant: 'نهى طارق',
-            artist: 'ياسر أحمد',
-            reportType: 'جودة منخفضة',
-            description: 'العمل لا يرقى إلى مستوى الصور المعروضة.',
-            date: '29-6-2025',
-            status: 'rejectedWord'
-        },
-
-        {
-            id: 10,
-            complainant: 'سليم حسن',
-            artist: 'أميرة سامي',
-            reportType: 'خدش في العمل',
-            description: 'اللوحة بها علامات واضحة أثرت على جمالها.',
-            date: '6-7-2025',
-            status: 'reviewedWord'
-        },
-
-        {
-            id: 11,
-            complainant: 'أحمد يونس',
-            artist: 'حسن علاء',
-            reportType: 'ألوان غير مطابقة',
-            description: 'ألوان اللوحة تختلف عن ما تم الاتفاق عليه.',
-            date: '20-7-2025',
-            status: 'resolvedWord'
-        },
-
-        {
-            id: 12,
-            complainant: 'مها جمال',
-            artist: 'نجلاء عبد الحليم',
-            reportType: 'تأخير في التسليم',
-            description: 'الطلب تأخر بدون أي تبرير.',
-            date: '1-8-2025',
-            status: 'pendingWord'
-        },
-
-        {
-            id: 13,
-            complainant: 'فاطمة حسين',
-            artist: 'رامي السيد',
-            reportType: 'ألوان غير مطابقة',
-            description: 'تدرجات الألوان مختلفة كليًا عما تم عرضه.',
-            date: '10-8-2025',
-            status: 'reviewedWord'
-        },
-
-        {
-            id: 14,
-            complainant: 'ليلى سمير',
-            artist: 'إيمان خالد',
-            reportType: 'مقاس غير صحيح',
-            description: 'المقاسات كانت خاطئة ولم يتم تصحيحها.',
-            date: '24-8-2025',
-            status: 'resolvedWord'
-        },
-
-        {
-            id: 15,
-            complainant: 'سارة شكري',
-            artist: 'طارق عبد الله',
-            reportType: 'تواصل غير متاح',
-            description: 'الفنان لم يرد على الرسائل رغم المحاولات المتكررة.',
-            date: '3-9-2025',
-            status: 'pendingWord'
-        }
-    ]
-
+    columns: ['complainantWord', 'artistWord', 'reportTypeWord', 'dateWord', 'reportDescriptionWord', 'statusWord', 'actionsWord'],
 }
 
 export default function Reports() {
 
     const {t, i18n} = useTranslation();
 
+    // ====== get-table-data ====== //
+    
+    const [currentPage, setCurrentPage] = useState(1);
+
+    useEffect(() => {
+        const main = document.querySelector('main.content-width');
+        if (main) {
+            main.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, [currentPage]);
+
+    const {data, isLoading, isError} = useFetchQuery(
+        ['reports', currentPage], 
+        `${endpoints.reports.getReports}?page=${currentPage}&limit=10`
+    );
+
     // ====== buttons-data ====== //
 
-    const usersButtons = [
-        {id: 2, title: 'exportDataWord', icon: <PiExportBold />, color: 'var(--white-color)', bgColor: 'var(--dark-blue-color)'},
-    ];
-
-    const uniqueReportType = [...new Set(tableData.data.map(report => report.reportType))];
-    const uniqueStatusType = [...new Set(tableData.data.map(report => report.status))];
+    const uniqueReportType = [...new Set(data?.data.reports.map(report => report.reportType))];
+    const uniqueStatusType = [...new Set(data?.data.reports.map(report => report.statusText))];
     const listButtonsData = [
 
         {
@@ -209,7 +70,7 @@ export default function Reports() {
                     label: status
                 }))
             ],
-            key: 'status'
+            key: 'statusText'
         },
 
     ];
@@ -224,7 +85,7 @@ export default function Reports() {
     const excludeValues = useMemo(() => ['allTypesWord', 'allStatusWord'], []);
     const searchKeys  = useMemo(() => ['complainant', 'artist'], []);
     const {filteredData, setFilters, setSearchText} = useFilterAndSearch(
-        tableData.data, initialFilters, excludeValues, searchKeys
+        data?.data.reports, initialFilters, excludeValues, searchKeys
     );
 
     // ====== handle-view-Report-button ====== //
@@ -240,9 +101,12 @@ export default function Reports() {
     // ====== handle-delete-row ====== //
 
     const [isOpen, setIsOpen] = useState(false);
-
-    const handleDeleteRow = () => {
+    const [openCount, setOpenCount] = useState(0);
+    const [itemId, setItemId] = useState(null);
+    const handleDeleteRow = (item) => {
         setIsOpen(true);
+        setItemId(item._id);
+        setOpenCount(prev => prev + 1);
     }
 
     return <React.Fragment>
@@ -251,20 +115,24 @@ export default function Reports() {
             {openReportPopUp && <PopUp onClose={() => setOpenReportPopUp(false)}>
                 <PopUpDescription title={'reportDescriptionWord'} msg={reportMessage} onClose={() => setOpenReportPopUp(false)} />
             </PopUp>}
-
-            {isOpen && <PopUp onClose={() => setIsOpen(false)}>
-                <WarningBox 
-                    icon={<PiWarningOctagonBold />} 
-                    title={'deleteReportTitle'} msg={'deleteReportMsg'} 
-                    onClose={() => setIsOpen(false)}
-                />
-            </PopUp>}
-
         </AnimatePresence>
+
+        {isOpen && <DeleteOperation key={openCount} method={'delete'}
+            icon={<PiWarningOctagonBold />} iconColor={'var(--red-color)'}
+            title={'deleteReportTitle'} msg={'deleteReportMsg'} 
+            successMsg={'deleteReportSuccessMsg'} errorMsg={'deleteReportErrorMsg'}
+            setIsOpen={setIsOpen} tableName={'reports'}
+            endPoint={`${endpoints.reports.getReports}/${itemId}`} 
+        />}
 
         <section className='w-full flex flex-col gap-10'>
 
-            <MainTitle title={'reportsManageWord'} slogan={'reportsManagementPageSlogan'} buttons={usersButtons} />
+            <MainTitle title={'reportsManageWord'} slogan={'reportsManagementPageSlogan'}>
+                <ExploreDataBtn 
+                    dataFormat={`data.reports`} fileName={'users-reports-data'}
+                    endpoint={endpoints.reports.getReports} queryName={'exportReports'}
+                />
+            </MainTitle>
 
             <div className='w-full flex flex-wrap gap-5 items-center justify-between'>
 
@@ -291,20 +159,13 @@ export default function Reports() {
 
                 <Table data={filteredData}
                     columns={tableData.columns}
+                    isLoading={isLoading} isError={isError}
+                    emptyMsg={'notFoundReportsWord'}
                     actions={true} 
                     renderRow={(report) => (
                         <React.Fragment>
 
                             <td className='p-2.5 whitespace-nowrap'>
-                                {Numbers(report.id, i18n.language)}
-                            </td>
-
-                            <td 
-                                className={`
-                                    ${i18n.language === 'en' ? 'border-l' : 'border-r'} 
-                                    border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
-                                `}
-                            >
                                 {report.complainant}
                             </td>
 
@@ -332,7 +193,7 @@ export default function Reports() {
                                     border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
                                 `}
                             >
-                                {report.date.split('-').map((item) => (
+                                {report.date.split('T')[0].split('-').map((item) => (
                                     Numbers(item, i18n.language, true)
                                 )).reverse().join(' - ')}
                             </td>
@@ -363,17 +224,15 @@ export default function Reports() {
                                     border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
                                 `}
                             >
-                                <ElementBox title={report.status} 
+                                <ElementBox title={report.statusText} 
                                     bgColor={
-                                        report.status === 'resolvedWord' ? 'var(--light-green-color)'
-                                        : report.status === 'pendingWord' ? 'var(--light-yellow-color)'
-                                        : report.status === 'reviewedWord' ? 'var(--sky-blue-color)'
+                                        report.status === 'resolved' ? 'var(--light-green-color)'
+                                        : report.status === 'pending' ? 'var(--light-yellow-color)'
                                         : 'var(--light-red-color)'
                                     } 
                                     color={
-                                        report.status === 'resolvedWord' ? 'var(--green-color)'
-                                        : report.status === 'pendingWord' ? 'var(--yellow-color)'
-                                        : report.status === 'reviewedWord' ? 'var(--dark-blue-color)'
+                                        report.status === 'resolved' ? 'var(--green-color)'
+                                        : report.status === 'pending' ? 'var(--yellow-color)'
                                         : 'var(--red-color)'
                                     } 
                                 />
@@ -405,6 +264,10 @@ export default function Reports() {
                 />
 
             </div>
+
+            {data?.data?.pagination.pages > 1 && 
+                <PaginationList data={data?.data?.pagination} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+            }
 
         </section>
 

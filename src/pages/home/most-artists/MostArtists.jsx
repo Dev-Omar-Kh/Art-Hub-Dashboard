@@ -1,10 +1,12 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import ListBtn from '../../../components/buttons/ListBtn';
-import Numbers from './../../../services/convertNum';
+import Numbers from './../../../hooks/useConvertNumber';
 import CurrencyImage from './../../../components/currency/CurrencyImage';
+import CardLoading from './CardLoading';
+import FetchError from '../../../components/error/FetchError';
 
-export default function MostArtists({data}) {
+export default function MostArtists({data, isLoading, isError}) {
 
     const {t, i18n} = useTranslation();
 
@@ -24,7 +26,9 @@ export default function MostArtists({data}) {
     const filtersData = [
         {id: 1, data: yearsTimeLineData, key: 'year'},
         {id: 2, data: monthsTimeLineData, key: 'month'},
-    ]
+    ];
+
+    if(isError) return <FetchError className='w-full h-fit' />
 
     return <React.Fragment>
 
@@ -53,7 +57,9 @@ export default function MostArtists({data}) {
                 '
             >
 
-                {data.map(card => <div 
+                {isLoading && Array.from({length: 3}).map((_, idx) => <CardLoading key={idx} />)}
+
+                {!isError && !isLoading && data && data.map(card => <div 
                     key={card.id}
                     className={`
                         relative h-fit p-5 flex flex-col items-center justify-center gap-5 
@@ -100,7 +106,7 @@ export default function MostArtists({data}) {
                                         color='blue'
                                     />}
                                 </p>
-                                <p className='text-base text-[var(--gray-color)]'>{ach.title}</p>
+                                <p className='text-base text-[var(--gray-color)]'>{t(ach.title)}</p>
                             </div>
                         ))}
 

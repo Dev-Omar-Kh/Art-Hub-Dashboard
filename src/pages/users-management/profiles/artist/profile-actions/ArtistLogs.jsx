@@ -1,5 +1,5 @@
 import React from 'react';
-import Numbers from '../../../../../services/convertNum';
+import Numbers from '../../../../../hooks/useConvertNumber';
 import { useTranslation } from 'react-i18next';
 import ElementBox from '../../../../../components/elements-box/ElementBox';
 

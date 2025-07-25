@@ -2,7 +2,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom';
 
-export default function MainTitle({title, slogan, buttons, haveBorder = false}) {
+export default function MainTitle({children, title, slogan, buttons, haveBorder = false}) {
 
     const {t} = useTranslation();
 
@@ -31,9 +31,11 @@ export default function MainTitle({title, slogan, buttons, haveBorder = false}) 
                 <p className='text-xl text-[var(--gray-color)]'>{t(slogan)}</p>
             </div>
 
-            {buttons && <div className='flex flex-wrap items-center gap-2.5'>
+            {(buttons || children) && <div className='flex flex-wrap items-center gap-2.5'>
 
-                {buttons.map(btn => (
+                {children}
+
+                {buttons && buttons.map(btn => (
                     btn.url 
                     ? <Link to={btn.url} key={btn.id} className={btnClassName} style={btnStyle(btn)}>
                         {btnContent(btn)}

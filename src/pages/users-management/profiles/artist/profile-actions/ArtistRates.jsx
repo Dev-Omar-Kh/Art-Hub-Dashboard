@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import ArtCard from '../../../../../components/cards/ArtCard';
 import StarRating from '../../../../../components/star-rating/StarRating';
-import Numbers from '../../../../../services/convertNum';
+import Numbers from '../../../../../hooks/useConvertNumber';
 
 const ratesData = [
     {

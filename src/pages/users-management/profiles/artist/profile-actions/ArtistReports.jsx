@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFilterAndSearch } from '../../../../../hooks/useFilterAndSearch';
-import Numbers from '../../../../../services/convertNum';
+import Numbers from '../../../../../hooks/useConvertNumber';
 import Table from '../../../../../components/table/Table';
 import ListBtn from '../../../../../components/buttons/ListBtn';
 import ElementBox from '../../../../../components/elements-box/ElementBox';

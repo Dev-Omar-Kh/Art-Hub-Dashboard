@@ -6,7 +6,7 @@ import profileCover from '../../../../assets/images/cover-image.jpg';
 import pfpImg from '../../../../assets/images/artist.jpg';
 import ElementBox from '../../../../components/elements-box/ElementBox';
 import { MdOutlineMail, MdOutlinePhoneEnabled } from 'react-icons/md';
-import Numbers from '../../../../services/convertNum';
+import Numbers from '../../../../hooks/useConvertNumber';
 import { useTranslation } from 'react-i18next';
 import { IoCalendarOutline, IoLocationOutline } from 'react-icons/io5';
 import { FaCheck } from 'react-icons/fa';

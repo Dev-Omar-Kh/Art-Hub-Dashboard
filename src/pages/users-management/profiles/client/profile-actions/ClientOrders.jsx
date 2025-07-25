@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import ListBtn from '../../../../../components/buttons/ListBtn';
 import { useFilterAndSearch } from '../../../../../hooks/useFilterAndSearch';
 import Table from '../../../../../components/table/Table';
-import Numbers from '../../../../../services/convertNum';
+import Numbers from '../../../../../hooks/useConvertNumber';
 import ElementBox from '../../../../../components/elements-box/ElementBox';
 import { Link } from 'react-router-dom';
 import { IoBanSharp } from 'react-icons/io5';

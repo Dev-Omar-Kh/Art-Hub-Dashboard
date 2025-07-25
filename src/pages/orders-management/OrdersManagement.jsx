@@ -1,13 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import MainTitle from '../../components/Titles/MainTitle';
-import { PiExportBold, PiWarningOctagonBold } from 'react-icons/pi';
+import { PiWarningOctagonBold } from 'react-icons/pi';
 import Table from '../../components/table/Table';
-import Numbers from '../../services/convertNum';
+import Numbers from '../../hooks/useConvertNumber';
 import { useTranslation } from 'react-i18next';
-
-// ====== import-images ====== //
-
-import orderImg from '../../assets/images/product-1.jpg';
 import ElementBox from '../../components/elements-box/ElementBox';
 import CurrencyImage from '../../components/currency/CurrencyImage';
 import { IoBanSharp } from 'react-icons/io5';
@@ -16,179 +12,61 @@ import { useFilterAndSearch } from '../../hooks/useFilterAndSearch';
 import ListBtn from '../../components/buttons/ListBtn';
 import { AnimatePresence } from 'framer-motion';
 import PopUp from '../../components/pop-up/PopUp';
-import WarningBox from '../../components/pop-up/warning-box/WarningBox';
+import { useFetchQuery } from '../../hooks/useFetchQuery';
+import { endpoints } from '../../constants/endPoints';
+import PaginationList from '../../components/pagination-list/PaginationList';
+import PopUpDescription from '../../components/pop-up/pop-up-box/PopUpDescription';
+import { IoIosArrowForward } from 'react-icons/io';
+import DeleteOperation from '../../components/delete-operation/DeleteOperation';
+import ExploreDataBtn from '../../components/explore-data/ExploreDataBtn';
+import * as Yup from 'yup';
 
 const tableData = {
 
-    columns: ['#', 'nameWord', 'priceWord', 'orderDateWord', 'artistWord', 'recipientCustomerWord', 'statusWord', 'actionsWord'],
+    columns: [
+        'typeWord', 'priceWord', 'orderDateWord', 'artistWord', 'recipientCustomerWord', 
+        'orderDescriptionWord', 'statusWord', 'actionsWord'
+    ],
 
-    data: [
+}
 
-        { 
-            id: 1, 
-            title: 'لوحة زيتية مخصصة', 
-            price: '850', 
-            date: '18-1-2025', 
-            artist: 'أحمد محمد', 
-            recipientCustomer: 'منى سالم', 
-            status: 'completedWord' 
-        },
-
-        { 
-            id: 2, 
-            title: 'لوحة مائية حديثة', 
-            price: '1180', 
-            date: '10-11-2024', 
-            artist: 'عمر خالد', 
-            recipientCustomer: 'ياسر فؤاد', 
-            status: 'rejectedWord' 
-        },
-
-        { 
-            id: 3, 
-            title: 'رسم بالفحم لمنظر طبيعي', 
-            price: '990', 
-            date: '5-2-2025', 
-            artist: 'ليلى علي', 
-            recipientCustomer: 'هدى إبراهيم', 
-            status: 'progressWord' 
-        },
-
-        { 
-            id: 4, 
-            title: 'بورتريه كلاسيكي', 
-            price: '1250', 
-            date: '22-3-2025', 
-            artist: 'سارة محمود', 
-            recipientCustomer: 'زياد محسن', 
-            status: 'completedWord' 
-        },
-
-        { 
-            id: 5, 
-            title: 'لوحة تجريدية ملونة', 
-            price: '1075', 
-            date: '17-4-2025', 
-            artist: 'محمود حسن', 
-            recipientCustomer: 'ريهام عبد الله', 
-            status: 'completedWord' 
-        },
-
-        { 
-            id: 6, 
-            title: 'رسم رقمي لمدينة', 
-            price: '890', 
-            date: '9-5-2025', 
-            artist: 'نورا إبراهيم', 
-            recipientCustomer: 'عماد مصطفى', 
-            status: 'rejectedWord' 
-        },
-
-        { 
-            id: 7, 
-            title: 'منظر بحري هادئ', 
-            price: '1130', 
-            date: '1-6-2025', 
-            artist: 'كريم مصطفى', 
-            recipientCustomer: 'مروان خليل', 
-            status: 'progressWord' 
-        },
-
-        { 
-            id: 8, 
-            title: 'لوحة بانورامية للصحراء', 
-            price: '960', 
-            date: '12-6-2025', 
-            artist: 'هدى عصام', 
-            recipientCustomer: 'شهد مجدي', 
-            status: 'completedWord' 
-        },
-
-        { 
-            id: 9, 
-            title: 'لوحة بألوان الباستيل', 
-            price: '780', 
-            date: '28-6-2025', 
-            artist: 'ياسر أحمد', 
-            recipientCustomer: 'نهى طارق', 
-            status: 'progressWord' 
-        },
-
-        { 
-            id: 10, 
-            title: 'رسم تعبيري بالحبر', 
-            price: '1040', 
-            date: '5-7-2025', 
-            artist: 'أميرة سامي', 
-            recipientCustomer: 'سليم حسن', 
-            status: 'completedWord' 
-        },
-
-        { 
-            id: 11, 
-            title: 'لوحة بورتريه عصري', 
-            price: '1150', 
-            date: '19-7-2025', 
-            artist: 'حسن علاء', 
-            recipientCustomer: 'أحمد يونس', 
-            status: 'rejectedWord' 
-        },
-
-        { 
-            id: 12, 
-            title: 'منظر جبلي هادئ', 
-            price: '990', 
-            date: '30-7-2025', 
-            artist: 'نجلاء عبد الحليم', 
-            recipientCustomer: 'مها جمال', 
-            status: 'completedWord' 
-        },
-
-        { 
-            id: 13, 
-            title: 'لوحة خيالية ساحرة', 
-            price: '1220', 
-            date: '9-8-2025', 
-            artist: 'رامي السيد', 
-            recipientCustomer: 'فاطمة حسين', 
-            status: 'progressWord' 
-        },
-
-        { 
-            id: 14, 
-            title: 'فن تجريدي بالأسود والأبيض', 
-            price: '870', 
-            date: '23-8-2025', 
-            artist: 'إيمان خالد', 
-            recipientCustomer: 'ليلى سمير', 
-            status: 'rejectedWord' 
-        },
-
-        { 
-            id: 15, 
-            title: 'لوحة رومانسية بألوان دافئة', 
-            price: '1110', 
-            date: '2-9-2025', 
-            artist: 'طارق عبد الله', 
-            recipientCustomer: 'سارة شكري', 
-            status: 'completedWord' 
-        },
-
-    ]
-
+const reasonInput = {
+    id: 'cancellationReason',
+    label: 'reasonWord',
+    placeHolder: 'reasonPlaceHolder',
+    type: 'text',
+    isPassword: false,
 }
 
 export default function OrdersManagement() {
 
-    const {i18n} = useTranslation();
+    const {t, i18n} = useTranslation();
+
+    // ====== get-table-data ====== //
+
+    const [currentPage, setCurrentPage] = useState(1);
+
+    useEffect(() => {
+        const main = document.querySelector('main.content-width');
+        if (main) {
+            main.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, [currentPage]);
+
+    const {data, isLoading, isError} = useFetchQuery(
+        ['orders', currentPage], 
+        `${endpoints.orders.getOrders}?page=${currentPage}&limit=10`,
+    );
+
+    console.log(data?.data);
 
     // ====== buttons-data ====== //
 
-    const usersButtons = [
-        {id: 2, title: 'exportDataWord', icon: <PiExportBold />, color: 'var(--white-color)', bgColor: 'var(--dark-blue-color)'},
-    ];
+    // const usersButtons = [
+    //     {id: 2, title: 'exportDataWord', icon: <PiExportBold />, color: 'var(--white-color)', bgColor: 'var(--dark-blue-color)'},
+    // ];
 
-    const uniqueStatuses = [...new Set(tableData.data.map(user => user.status))];
+    const uniqueStatuses = [...new Set(data?.data.orders.map(user => user.status))];
     const listButtonsData = [
 
         {
@@ -213,34 +91,67 @@ export default function OrdersManagement() {
     };
 
     const excludeValues = useMemo(() => ['allArtistsWord', 'allStatusWord'], []);
-    const searchKeys  = useMemo(() => ['title'], []);
+    const searchKeys  = useMemo(() => ['requestType'], []);
     const {filteredData, setFilters, setSearchText} = useFilterAndSearch(
-        tableData.data, initialFilters, excludeValues, searchKeys
+        data?.data.orders, initialFilters, excludeValues, searchKeys
     );
+
+    // ====== handle-view-Order-button ====== //
+    
+    const [openOrderPopUp, setOpenOrderPopUp] = useState(false);
+    const [orderMessage, setOrderMessage] = useState(null);
+
+    const showOrder = (msg) => {
+        setOpenOrderPopUp(true);
+        setOrderMessage(msg);
+    }
 
     // ====== handle-delete-row ====== //
 
     const [isOpen, setIsOpen] = useState(false);
-
-    const handleDeleteRow = () => {
+    const [openCount, setOpenCount] = useState(0);
+    const [itemId, setItemId] = useState(null);
+    const handleDeleteRow = (item) => {
         setIsOpen(true);
+        setItemId(item._id);
+        setOpenCount(prev => prev + 1);
+    }
+
+    const formikConfig = {
+        values: { cancellationReason: '' },
+        validationSchema: Yup.object({
+            cancellationReason: Yup.string()
+                .min(3, t('reasonMinError'))
+                .max(500, t('reasonMaxError'))
+                .required(t('reasonRequiredError')),
+        }),
     }
 
     return <React.Fragment>
 
-    <AnimatePresence>
-        {isOpen && <PopUp onClose={() => setIsOpen(false)}>
-            <WarningBox 
-                icon={<PiWarningOctagonBold />} 
-                title={'deleteOrderTitle'} msg={'deleteOrderMsg'} 
-                onClose={() => setIsOpen(false)}
-            />
-        </PopUp>}
-    </AnimatePresence>
+        <AnimatePresence>
+            {openOrderPopUp && <PopUp onClose={() => setOpenOrderPopUp(false)}>
+                <PopUpDescription title={'orderDescriptionWord'} msg={orderMessage} onClose={() => setOpenOrderPopUp(false)} />
+            </PopUp>}
+        </AnimatePresence>
+
+        {isOpen && <DeleteOperation key={openCount} method={'delete'}
+            icon={<PiWarningOctagonBold />} iconColor={'var(--red-color)'}
+            title={'deleteOrderTitle'} msg={'deleteOrderMsg'} 
+            successMsg={'deleteOrderSuccessMsg'} errorMsg={'deleteOrderErrorMsg'}
+            setIsOpen={setIsOpen} tableName={'orders'}
+            endPoint={`${endpoints.orders.getOrders}/${itemId}`} 
+            isInput={true} inputSetup={reasonInput} formikConfig={formikConfig}
+        />}
 
         <section className='w-full flex flex-col gap-10'>
 
-            <MainTitle title={'ordersManageWord'} slogan={'ordersManagementPageSlogan'} buttons={usersButtons} />
+            <MainTitle title={'ordersManageWord'} slogan={'ordersManagementPageSlogan'}>
+                <ExploreDataBtn 
+                    dataFormat={`data.orders`} fileName={'orders-data'}
+                    endpoint={endpoints.orders.getOrders} queryName={'exportOrders'}
+                />
+            </MainTitle>
 
             <div className='w-full flex flex-wrap gap-5 items-center justify-between'>
 
@@ -267,30 +178,14 @@ export default function OrdersManagement() {
 
                 <Table data={filteredData}
                     columns={tableData.columns} 
+                    isLoading={isLoading} isError={isError}
+                    emptyMsg={'notFoundMatchedOrdersMsg'}
                     actions={true}
                     renderRow={(order) => (
                         <React.Fragment>
 
                             <td className='p-2.5 whitespace-nowrap'>
-                                {Numbers(order.id, i18n.language)}
-                            </td>
-
-                            <td 
-                                className={`
-                                    ${i18n.language === 'en' ? 'border-l' : 'border-r'} 
-                                    border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
-                                `}
-                            >
-                                <div className='w-fit flex items-center gap-2.5'>
-                                    <img
-                                        className='
-                                            w-10 h-10 min-w-10 min-h-10 rounded-md object-cover 
-                                            border border-[var(--dark-blue-color)]
-                                        '
-                                        src={orderImg} alt={`${order.title} image`} loading='lazy' 
-                                    />
-                                    <p>{order.title}</p>
-                                </div>
+                                {order.requestType}
                             </td>
 
                             <td 
@@ -311,7 +206,7 @@ export default function OrdersManagement() {
                                     border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
                                 `}
                             >
-                                {order.date.split('-').map((item) => (
+                                {order.orderDate.split('T')[0].split('-').map((item) => (
                                     Numbers(item, i18n.language, true)
                                 )).reverse().join(' - ')}
                             </td>
@@ -322,7 +217,7 @@ export default function OrdersManagement() {
                                     border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
                                 `}
                             >
-                                {order.artist}
+                                {order.artist.displayName}
                             </td>
 
                             <td 
@@ -331,7 +226,27 @@ export default function OrdersManagement() {
                                     border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
                                 `}
                             >
-                                {order.recipientCustomer}
+                                {order.customer.displayName}
+                            </td>
+
+                            <td 
+                                className={`
+                                    ${i18n.language === 'en' ? 'border-l' : 'border-r'} 
+                                    border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
+                                `}
+                            >
+                                <div className='flex items-center justify-center'>
+                                    <button
+                                        onClick={() => showOrder(order.description)}
+                                        className='
+                                            px-2 py-1 flex items-center justify-center gap-1 cursor-pointer 
+                                            text-[var(--dark-blue-color)] bg-[var(--sky-blue-color)] rounded-md
+                                        '
+                                    >
+                                        <p>{t('viewDescriptionWord')}</p>
+                                        <IoIosArrowForward className={`${i18n.language === 'ar' ? 'rotate-y-180' : ''}`} />
+                                    </button>
+                                </div>
                             </td>
 
                             <td 
@@ -342,13 +257,17 @@ export default function OrdersManagement() {
                             >
                                 <ElementBox title={order.status} 
                                     bgColor={
-                                        order.status === 'completedWord' ? 'var(--light-green-color)'
-                                        : order.status === 'progressWord' ? 'var(--light-yellow-color)'
+                                        (order.status === 'مكتمل' || order.status === 'مقبول') ? 'var(--light-green-color)'
+                                        : order.status === 'قيد التنفيذ' ? 'var(--light-yellow-color)'
+                                        : order.status === 'قيد المراجعة' ? 'var(--sky-blue-color)'
+                                        : order.status === 'قيد الانتظار' ? 'var(--light-gray-color)'
                                         : 'var(--light-red-color)'
                                     } 
                                     color={
-                                        order.status === 'completedWord' ? 'var(--green-color)'
-                                        : order.status === 'progressWord' ? 'var(--yellow-color)'
+                                        (order.status === 'مكتمل' || order.status === 'مقبول') ? 'var(--green-color)'
+                                        : order.status === 'قيد التنفيذ' ? 'var(--yellow-color)'
+                                        : order.status === 'قيد المراجعة' ? 'var(--dark-blue-color)'
+                                        : order.status === 'قيد الانتظار' ? 'var(--gray-color)'
                                         : 'var(--red-color)'
                                     } 
                                 />
@@ -380,6 +299,10 @@ export default function OrdersManagement() {
                 />
 
             </div>
+
+            {data?.data?.pagination.pages > 1 && 
+                <PaginationList data={data?.data?.pagination} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+            }
 
         </section>
 

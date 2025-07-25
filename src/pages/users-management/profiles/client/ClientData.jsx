@@ -1,6 +1,6 @@
 import React from 'react';
 import { MdOutlineMail, MdOutlinePhoneEnabled } from 'react-icons/md';
-import Numbers from '../../../../services/convertNum';
+import Numbers from '../../../../hooks/useConvertNumber';
 import { useTranslation } from 'react-i18next';
 import { IoCalendarOutline, IoLocationOutline } from 'react-icons/io5';
 import ElementBox from '../../../../components/elements-box/ElementBox';

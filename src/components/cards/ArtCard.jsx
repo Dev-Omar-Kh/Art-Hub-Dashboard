@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next';
-import Numbers from '../../services/convertNum';
+import Numbers from '../../hooks/useConvertNumber';
 
 export default function ArtCard({order, children, date = true, comment = false, isArtist = false}) {
 

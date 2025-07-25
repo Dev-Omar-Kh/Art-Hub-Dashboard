@@ -5,13 +5,13 @@ import { useTranslation } from 'react-i18next';
 import { IoIosArrowForward } from 'react-icons/io';
 import { PiWarningCircle } from "react-icons/pi";
 
-export default function ListInput({ id, label, placeHolder, options, onSelect, onChange, onBlur, value, ValidationError }) {
+export default function ListInput({id, label, placeHolder, options, onSelect, onChange, onBlur, value, ValidationError, disabled}) {
 
     const {t, i18n} = useTranslation();
 
     // ======= handle-selected-list ======= //
 
-    const [searchTerm, setSearchTerm] = useState(value || '');
+    const [searchTerm, setSearchTerm] = useState(value?.label || '');
     const [filteredOptions, setFilteredOptions] = useState(options);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
@@ -19,21 +19,21 @@ export default function ListInput({ id, label, placeHolder, options, onSelect, o
     const dropdownRef = useRef(null);
 
     useEffect(() => {
-        setSearchTerm(value || '');
+        setSearchTerm(value?.label || '');
     }, [value]);
 
     const handleSearchChange = (e) => {
-        const value = e.target.value;
-        setSearchTerm(value);
+        const inputValue = e.target.value;
+        setSearchTerm(inputValue);
         setFilteredOptions(options.filter(option =>
-            option.toLowerCase().includes(value.toLowerCase())
+            option.label.toLowerCase().includes(inputValue.toLowerCase())
         ));
         setHighlightedIndex(-1);
         if (onChange) onChange(e);
     };
 
     const handleOptionClick = (option) => {
-        setSearchTerm(option);
+        setSearchTerm(option.label);
         setIsDropdownOpen(false);
         setHighlightedIndex(-1);
         if (onSelect) onSelect(option);
@@ -88,7 +88,7 @@ export default function ListInput({ id, label, placeHolder, options, onSelect, o
 
     return <React.Fragment>
 
-        <div className="relative w-full flex flex-col gap-1 group">
+        <div className={`relative w-full flex flex-col gap-1 group ${disabled ? 'opacity-50' : 'opacity-100'}`}>
 
             <label 
                 className={`
@@ -103,8 +103,9 @@ export default function ListInput({ id, label, placeHolder, options, onSelect, o
             </label>
 
             <input id={id}
+                disabled={disabled}
                 type="text"
-                value={value}
+                value={t(searchTerm)}
                 ref={inputRef}
                 autoComplete='off'
                 className={`
@@ -158,18 +159,18 @@ export default function ListInput({ id, label, placeHolder, options, onSelect, o
                                 {filteredOptions.map((option, index) => (
 
                                     <li 
-                                        key={index} 
+                                        key={option.value || index}
                                         onClick={() => handleOptionClick(option)}
                                         onMouseEnter={() => setHighlightedIndex(index)}
                                         className={`
                                             w-full p-2.5 border-b border-solid border-[var(--mid-gray-color)] cursor-pointer
                                             text-base text-[var(--gray-color)] last:border-b-0
-                                            ${searchTerm === option ? 'bg-[var(--dark-blue-color)] text-[var(--white-color)]' : ''}
+                                            ${value && value.value === option.value ? 'bg-[var(--dark-blue-color)] text-[var(--white-color)]' : ''}
                                             ${highlightedIndex === index ? 'bg-[var(--dark-blue-color)] text-[var(--white-color)]' : ''}
                                             duration-300 hover:bg-[var(--dark-blue-color)] hover:text-[var(--white-color)]
                                         `}
                                     >
-                                        {option}
+                                        {t(option.label)}
                                     </li>
 
                                 ))}

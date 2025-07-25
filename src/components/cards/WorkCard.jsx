@@ -3,7 +3,7 @@ import React from 'react';
 // ====== import-images ====== //
 
 import artImg from '../../assets/images/product-1.jpg';
-import Numbers from '../../services/convertNum';
+import Numbers from '../../hooks/useConvertNumber';
 import { useTranslation } from 'react-i18next';
 import CurrencyImage from '../currency/CurrencyImage';
 import ElementBox from '../elements-box/ElementBox';

@@ -1,5 +1,5 @@
 import React from 'react'
-import Numbers from '../../services/convertNum'
+import Numbers from '../../hooks/useConvertNumber'
 import { useTranslation } from 'react-i18next'
 import CurrencyImage from '../currency/CurrencyImage';
 
@@ -13,7 +13,8 @@ export default function StatisticsCard({data}) {
             key={data.id} 
             className='
                 p-5 rounded-2xl bg-[var(--white-color)] 
-                flex flex-col gap-2.5 shadow-[0_0px_10px_var(--shadow-black-color)]'
+                flex flex-col gap-2.5 shadow-[0_0px_10px_var(--shadow-black-color)]
+            '
         >
 
             <div className='w-full flex flex-col gap-1'>

@@ -6,7 +6,9 @@ import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import { useTranslation } from 'react-i18next';
 
 
-export default function Input({id, label, type, password, loading, placeHolder, width, onChange, onBlur, value, ValidationError}) {
+export default function Input({
+    id, label, type, password, loading, placeHolder, width, onChange, onBlur, value, ValidationError, disabled
+}) {
 
     const {t, i18n} = useTranslation();
 
@@ -41,7 +43,7 @@ export default function Input({id, label, type, password, loading, placeHolder, 
 
     return <React.Fragment>
 
-        <div className={`relative ${width ? width : 'w-full'} flex flex-col gap-1 group`}>
+        <div className={`relative ${width ? width : 'w-full'} flex flex-col gap-1 group ${disabled ? 'opacity-50' : 'opacity-100'}`}>
 
             <label 
                 className={`
@@ -57,6 +59,7 @@ export default function Input({id, label, type, password, loading, placeHolder, 
 
             <input id={id}
                 type={password ? passType : type}
+                disabled={disabled}
                 placeholder={t(placeHolder)}
                 className={`
                     w-full h-10 px-2.5 ${i18n.language === 'en' ? 'pr-10.5' : 'pl-10.5'} rounded-md border border-solid 

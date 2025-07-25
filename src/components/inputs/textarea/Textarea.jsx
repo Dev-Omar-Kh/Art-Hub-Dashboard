@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 
-export default function Textarea({id, label, placeHolder, value, onChange, onBlur, ValidationError}) {
+export default function Textarea({id, label, placeHolder, value, onChange, onBlur, ValidationError, disabled}) {
 
     const {t} = useTranslation();
 
@@ -38,9 +38,11 @@ export default function Textarea({id, label, placeHolder, value, onChange, onBlu
 
             <textarea 
                 id={id} placeholder={t(placeHolder)}
+                disabled={disabled}
                 className={`
                     w-full field-sizing-content min-h-28 max-h-96 p-2.5 rounded-md border border-solid resize-none
                     ${hasValue ? 'border-[var(--dark-blue-color)]' : 'border-[var(--gray-color)]'} 
+                    ${disabled ? 'opacity-50' : 'opacity-100'}
                     placeholder:text-[var(--gray-color)]
                     outline-0 duration-300 focus:border-[var(--dark-blue-color)] text-base font-medium text-[var(--black-color)]
                 `}

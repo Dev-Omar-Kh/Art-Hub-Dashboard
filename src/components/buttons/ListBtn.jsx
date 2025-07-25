@@ -4,7 +4,7 @@ import { IoIosArrowBack } from 'react-icons/io';
 import { AnimatePresence, motion } from 'framer-motion';
 import Animations from '../../animations/Animations';
 
-export default function ListBtn({listData, color='var(--sky-blue-color)', filterKey, onFilterChange}) {
+export default function ListBtn({listData, color='var(--sky-blue-color)', text='var(--dark-blue-color)', filterKey, onFilterChange}) {
 
     const {t} = useTranslation();
 
@@ -46,7 +46,7 @@ export default function ListBtn({listData, color='var(--sky-blue-color)', filter
 
             <button 
                 onClick={() => setDisplayList(!displayList)}
-                style={{backgroundColor: color}}
+                style={{backgroundColor: color, color: text}}
                 className='
                     w-fit px-3 py-2.5 flex items-center gap-2.5 rounded-md 
                     text-[var(--dark-blue-color)] cursor-pointer

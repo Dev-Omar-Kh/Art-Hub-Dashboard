@@ -1,5 +1,5 @@
 import React from 'react'
-import Numbers from '../../services/convertNum'
+import Numbers from '../../hooks/useConvertNumber'
 import { useTranslation } from 'react-i18next'
 import { IoIosArrowForward } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';

@@ -32,6 +32,7 @@
 
     "revenueStatistics": "إحصائيات الإيرادات",
     "orderStatistics": "إحصائيات الطلبات",
+    "revenueAndOrdersStatistics": "إحصائيات الإيرادات و الطلبات",
 
     "lastXMonthWord": "آخر {{count}} شهرًا",
     "lastMonthWord": "آخر شهر",
@@ -71,6 +72,7 @@
 
     "allStatusWord": "كل الحالات",
     "activeWord": "نشط",
+    "inactiveWord": "غير نشط",
     "bannedWord": "محظور",
     "onlineWord": "متصل",
     "offlineWord": "غير متصل",
@@ -252,8 +254,10 @@
     "confirmPasswordPlaceHolder": "أكد كلمة المرور",
     "addWord": "إضافة",
 
-    "deleteUserTitle": "حذف المستخدم",
-    "deleteUserMsg": "هل أنت متأكد أنك تريد حذف هذا المستخدم؟ لا يمكن التراجع عن هذا الإجراء.",
+    "deleteUserTitle": "حظر المستخدم",
+    "deleteUserMsg": "هل أنت متأكد أنك تريد حظر هذا المستخدم؟ لا يمكن التراجع عن هذا الإجراء.",
+    "reactiveUserTitle": "إعادة تفعيل الحساب",
+    "reactiveUserMsg": "هل أنت متأكد أنك تريد إعادة تفعيل حساب هذا المستخدم",
     "deleteAdminTitle": "حذف المشرف",
     "deleteAdminMsg": "هل أنت متأكد أنك تريد حذف هذا المشرف؟ لا يمكن التراجع عن هذا الإجراء.",
     "deleteOrderTitle": "حذف الطلب",
@@ -264,7 +268,82 @@
     "deleteReportMsg": "هل أنت متأكد أنك تريد حذف هذا البلاغ؟ لا يمكن التراجع عن هذا الإجراء.",
     "confirmWord": "تأكيد",
 
+    "banUserSuccessMsg": "تم حظر المستخدم بنجاح",
+    "activeUserSuccess": "تم إعادة تفعيل حساب المستخدم بنجاح",
+    "banUserErrorMsg": "فشل حظر المستخدم",
+    "activeUserErrorMsg": "فشل إعادة تفعيل حساب المستخدم",
+
     "pageNoteFoundMsg": "هذه الصفحة غير موجودة او تمت إزالتها",
-    "goBackWord": "العودة للخلف"
+    "goBackWord": "العودة للخلف",
+
+    "errorFetchMessage": "فشل تحميل البيانات!",
+
+    "worksWord": "أعمال",
+    "salesWord": "مبيعات",
+
+    "notFoundMatchedUsersMsg": "لا يوجد مستخدمين مطابقين",
+
+    "loginSuccessMsg": "تم تسجيل الدخول بنجاح",
+    "loginErrorMsg": "فشل تسجيل الدخول، يرجى التحقق من بيانات الدخول",
+
+    "sndSuccessMsg": "تم إرسال الرسالة بنجاح",
+    "sendErrorMsg": "فشل إرسال الرسالة، يرجى المحاولة لاحق",
+
+    "exportAsPDFWord": "تصدير بصيغة PDF",
+    "exportAsExcelWord": "تصدير بصيغة Excel",
+    "exportAsCsvWord": "تصدير بصيغة CSV",
+    "exportAsJsonWord": "تصدير بصيغة JSON",
+
+    "notFoundMatchedAdminsMsg": "لا يوجد مشرفين مطابقين",
+
+    "banAdminSuccessMsg": "تم حذف المشرف بنجاح",
+    "banAdminErrorMsg": "فشل حذف المشرف",
+
+    "chooseAdminRoleWord": "اختر دور المشرف",
+    "chooseAdminRolePlaceholder": "اختر دور المشرف المناسب",
+
+    "nameMinError": "الاسم قصير جدًا",
+    "nameMaxError": "الاسم طويل جدًا",
+    "nameRequiredError": "الاسم مطلوب",
+    "confirmPasswordMatchError": "كلمة المرور غير متطابقة",
+    "confirmPasswordRequiredError": "تأكيد كلمة المرور مطلوب",
+    "roleRequiredError": "الدور مطلوب",
+    "imageRequiredError": "الصورة مطلوبة",
+
+    "addAdminSuccessMsg": "تم إضافة المشرف بنجاح",
+    "addAdminErrorMsg": "فشل إضافة المشرف، يرجى المحاولة لاحقاً",
+
+    "changeImageWord": "تغيير الصورة",
+    "updateAdminWord": "تحديث بيانات المشرف",
+    "updateAdminSlogan": "تحديث بيانات المشرف الحالي",
+    "updateAdminSuccessMsg": "تم تحديث بيانات المشرف بنجاح",
+    "updateAdminErrorMsg": "فشل تحديث بيانات المشرف، يرجى المحاولة لاحقاً",
+
+    "notFoundMatchedOrdersMsg": "لا توجد طلبات مطابقة",
+    "orderDescriptionWord": "وصف الطلب",
+    "viewDescriptionWord": "عرض الوصف",
+
+    "deleteOrderSuccessMsg": "تم حذف الطلب بنجاح",
+    "deleteOrderErrorMsg": "فشل حذف الطلب، يرجى المحاولة لاحقاً",
+    
+    "reasonWord": "السبب",
+    "reasonPlaceHolder": "أدخل سبب حذف الطلب",
+
+    "reasonMinError": "السبب قصير جدًا",
+    "reasonMaxError": "السبب طويل جدًا",
+    "reasonRequiredError": "السبب مطلوب",
+
+    "notFountMatchingRatesWord": "لا توجد تقييمات مطابقة",
+
+    "deleteRateSuccessMsg": "تم حذف التقييم بنجاح",
+    "deleteRateErrorMsg": "فشل حذف التقييم، يرجى المحاولة لاحقاً",
+
+    "notFoundReportsWord": "لا توجد بلاغات مطابقة",
+
+    "deleteReportSuccessMsg": "تم حذف البلاغ بنجاح",
+    "deleteReportErrorMsg": "فشل حذف البلاغ، يرجى المحاولة لاحقاً",
+
+    "noDataWord": "لا توجد بيانات",
+    "noArtistsDataWord": "لا توجد بيانات لفنانين"
 
 }
