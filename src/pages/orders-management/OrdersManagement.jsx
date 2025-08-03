@@ -58,8 +58,6 @@ export default function OrdersManagement() {
         `${endpoints.orders.getOrders}?page=${currentPage}&limit=10`,
     );
 
-    console.log(data?.data);
-
     // ====== buttons-data ====== //
 
     // const usersButtons = [

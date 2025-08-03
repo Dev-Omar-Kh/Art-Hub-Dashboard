@@ -1,16 +1,16 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 import WarningBox from '../pop-up/warning-box/WarningBox';
 import PopUp from '../pop-up/PopUp';
-import { PiWarningOctagonBold } from 'react-icons/pi';
 import { useApiMutation } from '../../hooks/useApiMutation';
 import { useQueryClient } from '@tanstack/react-query';
 import ResponseBox from '../pop-up/response-box/ResponseBox';
 import { AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 export default function DeleteOperation({
     setIsOpen, endPoint, title, msg, tableName, 
     successMsg, errorMsg, method, icon, iconColor,
-    isInput = false, inputSetup, formikConfig
+    isInput = false, inputSetup, formikConfig, goTo = null
 }) {
 
     const [isConfirm, setIsConfirm] = useState(false);
@@ -19,6 +19,7 @@ export default function DeleteOperation({
     const [showError, setShowError] = useState(false);
     const [values, setValues] = useState(null);
 
+    const navigate = useNavigate();
     const useMutation = useApiMutation();
     const useMutationRef = useRef(useMutation);
     const queryClient = useQueryClient();
@@ -48,7 +49,10 @@ export default function DeleteOperation({
             setTimeout(() => {
                 setShowSuccess(false);
                 queryClient.invalidateQueries([tableName]);
-                setTimeout(() => {setIsOpen(false)}, 300);
+                setTimeout(() => {
+                    setIsOpen(false);
+                    navigate(goTo);
+                }, 300);
             }, 2500);
         }
 
@@ -63,7 +67,7 @@ export default function DeleteOperation({
 
     }, [
         useMutation.isSuccess, useMutation.isPending, useMutation.isError, 
-        useMutation.data, tableName, handleClose, queryClient, setIsOpen
+        useMutation.data, tableName, handleClose, queryClient, setIsOpen, goTo, navigate
     ]);
 
     return <React.Fragment>

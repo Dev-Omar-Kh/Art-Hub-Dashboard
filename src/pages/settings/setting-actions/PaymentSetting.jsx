@@ -8,12 +8,14 @@ import ListInput from './../../../components/inputs/list-input/ListInput';
 const checkBoxData = [
 
     {
-        id: 'allowOrders',
-        title: 'allowCreateOrdersWord',
-        label: 'allowCreateOrdersLabel',
+        id: 'allowOnlinePayment',
+        title: 'allowCreateOnlinePaymentWord',
+        label: 'allowCreateOnlinePaymentLabel',
     },
 
 ];
+
+const paymentOptions = [{label: "Stripe", value: "Stripe"}, {label: "PayPal", value: "PayPal"}, {label: "Adyen", value: "Adyen"}]
 
 export default function PaymentSetting() {
 
@@ -36,7 +38,7 @@ export default function PaymentSetting() {
             <ListInput 
                 id={'role'} label={'choosePaymentMethodWord'}
                 placeHolder={'choosePaymentMethodPlaceholder'}
-                options={["Stripe", "PayPal", "Adyen"]}
+                options={paymentOptions}
                 // onChange={formikObj.handleChange} value={formikObj.values.role}
                 // onBlur={formikObj.handleBlur}
             />

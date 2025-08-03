@@ -11,6 +11,8 @@ import { useFetchQuery } from '../../hooks/useFetchQuery';
 import { endpoints } from '../../constants/endPoints';
 import StatisticsLoading from '../../components/statistics-card/StatisticsLoading';
 import FetchError from '../../components/error/FetchError';
+import ExploreDataBtn from '../../components/explore-data/ExploreDataBtn';
+import SelectBtn from '../../components/buttons/SelectBtn';
 
 export default function SalesAnalysis() {
 
@@ -18,14 +20,43 @@ export default function SalesAnalysis() {
 
     // ====== buttons-data ====== //
 
-    const salesAnalysisButtons = [
-        // {id: 1, title: 'displayAnalysisWod', color: 'white'},
-        {id: 2, title: 'downloadReportWord', icon: <LuCloudDownload/>, color: 'var(--white-color)', bgColor: 'var(--dark-blue-color)'},
-    ];
+    // const salesAnalysisButtons = [
+    //     // {id: 1, title: 'displayAnalysisWod', color: 'white'},
+    //     {id: 2, title: 'downloadReportWord', icon: <LuCloudDownload/>, color: 'var(--white-color)', bgColor: 'var(--dark-blue-color)'},
+    // ];
+
+    // ====== handle-select-year ====== //
+
+    const [yearSelected, setYearSelected] = useState(null);
+
+    const year = new Date().getUTCFullYear();
+    const reportsOptions = [];
+    for (let y = 2023; y <= year; y++) {
+        reportsOptions.push({ 
+            label: `${t('yearWord')} ${Numbers(y, i18n.language, true)}`, 
+            value: y 
+        });
+    }
+
+    const onYearSelect = (value) => {
+        setYearSelected(value);
+    }
 
     // ====== statistics-data ====== //
 
-    const statisticsRes = useFetchQuery("SalesStatistics", endpoints.salesAnalysis.getStatistics);
+    const statisticPeriodTimes = [
+        {label: t('last30DayWord'), value: '30days'},
+        {label: t('last90DayWord'), value: '90days'},
+        {label: t('last7DaysWord'), value: '7days'},
+    ];
+
+    const [statisticPeriod, setStatisticPeriod] = useState({months: '30days'});
+    const statisticsRes = useFetchQuery(
+        ["SalesStatistics", statisticPeriod], 
+        `${endpoints.salesAnalysis.getStatistics}?period=${statisticPeriod.months}`
+    );
+
+    const statisticPeriodData = {data: statisticPeriodTimes, key: 'months'} 
 
     const stats = statisticsRes?.data?.data;
     const statisticsData = [
@@ -58,7 +89,7 @@ export default function SalesAnalysis() {
             value: stats?.topSellingArtist ? stats?.topSellingArtist.name : t('noDataWord'), 
             isMoney: false, 
             isString: true, 
-            msg: stats?.topSellingArtist ? stats?.topSellingArtist.value : 0, 
+            msg: stats?.topSellingArtist ? stats?.topSellingArtist.sales : 0, 
             color: 'green'
         },
 
@@ -105,29 +136,63 @@ export default function SalesAnalysis() {
 
     const topArtistsRes = useFetchQuery("topSellers", endpoints.salesAnalysis.topArtists);
 
-    console.log(topArtistsRes.data?.data?.artists);
-    
-
     return <React.Fragment>
 
         <section className='w-full flex flex-col gap-10'>
 
-            <MainTitle title={'salesAnalysisWord'} slogan={'salesAnalysisPageSlogan'} buttons={salesAnalysisButtons} />
+            <MainTitle title={'salesAnalysisWord'} slogan={'salesAnalysisPageSlogan'}>
+
+                {!yearSelected && <SelectBtn 
+                    icon={<LuCloudDownload />} title={'downloadReportWord'} 
+                    options={reportsOptions} handleClick={onYearSelect}
+                />}
+
+                {yearSelected && <div>
+                    <ExploreDataBtn 
+                        dataFormat={`data`} fileName={`comprehensive-report-${yearSelected}`}
+                        endpoint={endpoints.salesAnalysis.comprehensive} theParam={`?year=${yearSelected}`} 
+                        queryName={['exportOverview', yearSelected]} getFullData={false}
+                    />
+                </div>}
+
+            </MainTitle>
 
             {statisticsRes.isError && analysisRes.isError && topArtistsRes.isError && <FetchError className='w-full h-full' />}
 
             {!statisticsRes.isError && !analysisRes.isError && !topArtistsRes.isError && <React.Fragment>
 
                 { statisticsRes.isError && <FetchError className='w-full h-fit' />}
-                {!statisticsRes.isError && <div className='w-full grid grid-cols-3 gap-5 max-[720px]:grid-cols-1'>
+                {!statisticsRes.isError && (
+                    <div 
+                        className='
+                            w-full p-5 flex flex-col gap-5 rounded-2xl bg-[var(--white-color)] 
+                            shadow-[0_0px_10px_var(--shadow-black-color)] overflow-hidden
+                        '
+                    >
 
-                    {statisticsRes.isPending && Array.from({length: 3}, (_, idx) => (
-                        <StatisticsLoading key={idx} />
-                    ))}
+                        <div className='w-full flex items-center justify-between gap-5'>
 
-                    {statisticsRes.data && statisticsData.map(stat => <StatisticsCard key={stat.id} data={stat} />)}
+                            <h3 className='text-lg font-semibold text-[var(--dark-blue-color)]'>{t('statisticsWord')}</h3>
 
-                </div>}
+                            <ListBtn listData={statisticPeriodData.data} 
+                                filterKey={statisticPeriodData.key}
+                                onFilterChange={(key, value) => setStatisticPeriod(prev => ({ ...prev, [key]: value }))}
+                            />
+
+                        </div>
+
+                        <div className='grid grid-cols-3 gap-5 max-[720px]:grid-cols-1'>
+                            {statisticsRes.isPending && Array.from({length: 3}, (_, idx) => (
+                                <StatisticsLoading key={idx} className={'!bg-[var(--light-gray-color)]'} />
+                            ))}
+
+                            {statisticsRes.data && statisticsData.map(stat => 
+                                <StatisticsCard key={stat.id} data={stat} className={'!bg-[var(--light-gray-color)]'} />
+                            )}
+                        </div>
+
+                    </div>
+                )}
 
                 {analysisRes.isError && <FetchError className='w-full h-fit' />}
                 {!analysisRes.isError && <div 
@@ -137,9 +202,11 @@ export default function SalesAnalysis() {
                     '
                 >
 
-                    {analysisRes.isPending && <div className='absolute top-0 left-0 w-full h-full bg-[var(--white-color)] z-10 opacity-50'>
-                        
-                    </div>}
+                    {analysisRes.isPending && (
+                        <div className='absolute top-0 left-0 w-full h-full bg-[var(--white-color)] z-10 opacity-50'>
+                            
+                        </div>
+                    )}
 
                     <div className='w-full flex items-center justify-between gap-5'>
 

@@ -13,6 +13,7 @@ export default function MainTitle({children, title, slogan, buttons, haveBorder 
     const btnClassName = `
         py-2.5 px-5 rounded-md  flex items-center gap-2.5 font-medium cursor-pointer
         ${haveBorder ? 'border border-[var(--dark-blue-color)]' : ''}
+        disabled:cursor-not-allowed disabled:opacity-50
     `;
 
     const btnContent = (btn) => <React.Fragment>
@@ -37,10 +38,18 @@ export default function MainTitle({children, title, slogan, buttons, haveBorder 
 
                 {buttons && buttons.map(btn => (
                     btn.url 
-                    ? <Link to={btn.url} key={btn.id} className={btnClassName} style={btnStyle(btn)}>
+                    ? <Link 
+                        to={btn.url} 
+                        key={btn.id} 
+                        onClick={(e) => btn.disabled === false && e.preventDefault()}
+                        className={`${btn.disabled === false ? 'opacity-50' : 'opacity-100'} ${btnClassName}`} style={btnStyle(btn)}
+                    >
                         {btnContent(btn)}
                     </Link>
-                    : <button key={btn.id} className={btnClassName} style={btnStyle(btn)} onClick={btn.onClick}>
+                    : <button 
+                        key={btn.id} 
+                        className={btnClassName} style={btnStyle(btn)} disabled={btn.disabled} onClick={btn.onClick}
+                    >
                         {btnContent(btn)}
                     </button>
                 ))}

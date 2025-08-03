@@ -1,33 +1,22 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { IoIosArrowBack } from 'react-icons/io';
-import { AnimatePresence, motion } from 'framer-motion';
 import Animations from '../../animations/Animations';
+import { AnimatePresence, motion } from 'framer-motion';
+import { IoIosArrowBack } from 'react-icons/io';
+import { useTranslation } from 'react-i18next';
 
-export default function ListBtn({
-    listData, filterKey, onFilterChange, selectedValue = null,
-    color='var(--sky-blue-color)', text='var(--dark-blue-color)', 
-}) {
+export default function SelectBtn({icon, title, options, handleClick, disabled = false}) {
 
     const {t} = useTranslation();
 
-    const [displayList, setDisplayList] = useState(false);
-    const [chosenItem, setChosenItem] = useState(listData[0]);
     const listRef = useRef(null);
+    const [displayOptions, setDisplayOptions] = useState(false);
 
-    useEffect(() => {
-        const selected = listData.find(item => item.value === selectedValue);
-        if (selected) {
-            setChosenItem(selected);
-        }
-    }, [selectedValue, listData]);
-
-    // ====== handle-click-outside-list ====== //
+    // ====== handle-list-button ====== //
 
     const handleClickOutside = useCallback((event) => {
-
+    
         if (listRef.current && !listRef.current.contains(event.target)) {
-            setDisplayList(false);
+            setDisplayOptions(false);
         }
 
     }, []);
@@ -42,35 +31,33 @@ export default function ListBtn({
 
     }, [handleClickOutside]);
 
-    // ====== handle-change-item ====== //
+    // ====== handle-select-option ====== //
 
-    const choseItem = (item) => {
-        onFilterChange(filterKey, item.value);
-        setChosenItem(item);
-        setDisplayList(false);
-    };
+    const selectOption = (value) => {
+        handleClick(value);
+        setDisplayOptions(false);
+    }
 
     return <React.Fragment>
 
         <div ref={listRef} className='relative'>
 
             <button 
-                onClick={() => setDisplayList(!displayList)}
-                style={{backgroundColor: color, color: text}}
-                className='
-                    w-fit px-3 py-2.5 flex items-center gap-2.5 rounded-md 
-                    text-[var(--dark-blue-color)] cursor-pointer
-                '
+                disabled={disabled}
+                onClick={() => setDisplayOptions(!displayOptions)}
+                className={`
+                    px-5 py-2.5 flex items-center gap-2.5 rounded-md bg-[var(--dark-blue-color)]
+                    text-xl font-medium text-[var(--white-color)]
+                    ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+                `}
             >
-
-                <p className='text-base font-semibold '>{t(chosenItem.label)}</p>
-
-                <IoIosArrowBack className={`text-xl duration-300 ${displayList ? '-rotate-90' : ''}`} />
-
+                {icon}
+                <p className='text-base'>{t(title)}</p>
+                <IoIosArrowBack className={`duration-300 ${displayOptions ? '-rotate-90' : ''}`} />
             </button>
 
             <AnimatePresence>
-                {displayList && <motion.div 
+                {displayOptions && <motion.div
                     variants={Animations.displayList}
                     initial='hidden' animate='visible' exit={'exit'}
                     className='
@@ -82,13 +69,12 @@ export default function ListBtn({
 
                     <ul className='w-full max-h-80 rounded-md overflow-auto'>
 
-                        {listData.map( (item, idx) => <li 
+                        {options.map( (item, idx) => <li 
                             key={idx}
-                            onClick={() => choseItem(item)}
+                            onClick={() => selectOption(item.value)}
                             className={`
                                 w-full p-2.5 border-b border-solid border-[var(--sky-blue-color)] last:border-0 font-medium
                                 text-[var(--dark-blue-color)] text-center duration-300 hover:bg-[var(--sky-blue-color)] cursor-pointer
-                                ${chosenItem.value === item.value ? 'bg-[var(--sky-blue-color)]' : 'bg-[var(--white-color)]'}
                             `}
                         >{t(item.label)}</li>)}
 

@@ -167,7 +167,7 @@ export default function ImgInput({
                     <div className='text-xl'>{icon}</div>
                     <p className='text-lg font-medium'>
                         {fileValue && !(typeof fileValue === 'string' || (typeof fileValue === 'object' && fileValue.url))
-                            ? t('changeImageWord') || t(label)
+                            ? t(multiple ? 'changeImagesWord' : 'changeImageWord') || t(label)
                             : t(label)
                         }
                     </p>

@@ -10,6 +10,7 @@ import { IoArrowUpOutline } from 'react-icons/io5';
 import { IoIosArrowForward } from 'react-icons/io';
 import { Link } from 'react-router-dom';
 import { HiArrowTrendingDown, HiArrowTrendingUp } from 'react-icons/hi2';
+import { ROUTES } from '../../../constants/routes';
 
 const tableData = {
 
@@ -261,7 +262,7 @@ export default function BestSellers({data, isLoading, isError}) {
                             >
                                 <div className='flex items-center justify-center'>
                                     <Link 
-                                        // to={profileId(user)}
+                                        to={`${ROUTES.USERS_ROUTE}/${ROUTES.ARTIST_PROFILE_ROUTE}/${artist._id}`}
                                         className='
                                             px-2 py-1 flex items-center justify-center gap-1 cursor-pointer 
                                             text-[var(--dark-blue-color)] bg-[var(--mid-blue-color)] rounded-md

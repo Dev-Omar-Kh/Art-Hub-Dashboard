@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import CustomBtn from '../buttons/CustomBtn';
 import { ROUTES } from '../../constants/routes';
 import { RiLogoutCircleRLine, RiShoppingCartLine } from 'react-icons/ri';
@@ -17,8 +17,9 @@ import { MdOutlineAdminPanelSettings } from 'react-icons/md';
 
 export default function SideBar({setDisplayNav}) {
 
-    const links = [
+    const navigate = useNavigate();
 
+    const links = [
         {icon: <GoHome/>, title: 'homeWord', path: ROUTES.HOME_ROUTE},
         {icon: <LuUsers/>, title: 'usersManageWord', path: ROUTES.USERS_ROUTE},
         {icon: <MdOutlineAdminPanelSettings/>, title: 'adminsManageWord', path: ROUTES.ADMINS_ROUTE},
@@ -27,8 +28,13 @@ export default function SideBar({setDisplayNav}) {
         {icon: <PiStarHalfFill/>, title: 'ratesWord', path: ROUTES.RATES_ROUTE},
         {icon: <BsFileEarmarkText/>, title: 'reportsWord', path: ROUTES.REPORTS_ROUTE},
         {icon: <IoSettingsOutline/>, title: 'settingSystemWord', path: ROUTES.SETTINGS_ROUTE},
-
     ];
+
+    const handleLogout = () => {
+        sessionStorage.removeItem('token');
+        setDisplayNav(false);
+        setTimeout(() => {navigate(ROUTES.LOGIN_ROUTE, {replace: true})}, 300);
+    }
 
     return <React.Fragment>
 
@@ -77,7 +83,7 @@ export default function SideBar({setDisplayNav}) {
             </nav>
 
             <div className='w-full px-2.5'>
-                <button className='w-full' onClick={() => setDisplayNav(false)}>
+                <button className='w-full' onClick={handleLogout}>
                     <CustomBtn 
                         icon={<RiLogoutCircleRLine/>}
                         title={'logoutWord'} hover={true} color={'var(--light-red-color)'} 

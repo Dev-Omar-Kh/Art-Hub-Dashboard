@@ -3,7 +3,7 @@ import Numbers from '../../hooks/useConvertNumber'
 import { useTranslation } from 'react-i18next'
 import CurrencyImage from '../currency/CurrencyImage';
 
-export default function StatisticsCard({data}) {
+export default function StatisticsCard({data, className}) {
 
     const {t, i18n} = useTranslation();
 
@@ -11,10 +11,11 @@ export default function StatisticsCard({data}) {
 
         <div 
             key={data.id} 
-            className='
+            className={`
                 p-5 rounded-2xl bg-[var(--white-color)] 
                 flex flex-col gap-2.5 shadow-[0_0px_10px_var(--shadow-black-color)]
-            '
+                ${className}
+            `}
         >
 
             <div className='w-full flex flex-col gap-1'>

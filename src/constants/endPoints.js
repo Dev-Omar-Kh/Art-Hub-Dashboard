@@ -7,7 +7,8 @@ export const endpoints = {
     home: {
         statistics: '/dashboard/statistics',
         analysis: '/dashboard/charts',
-        topArtists: '/dashboard/artists/performance?limit=3'
+        topArtists: '/dashboard/artists/performance',
+        overView: '/dashboard/overview',
     },
 
     users: {
@@ -17,6 +18,7 @@ export const endpoints = {
 
     admins: {
         getAdmins: '/admin/admins',
+        profile: '/admin/profile',
     },
 
     orders: {
@@ -35,6 +37,23 @@ export const endpoints = {
         getStatistics: '/dashboard/sales/analytics',
         topArtists: '/dashboard/sales/top-artists',
         trendData: '/dashboard/sales/trends',
+        comprehensive: '/dashboard/sales/comprehensive',
+    },
+
+    artist: {
+        baseLink: '/admin/artists',
+        getWorks: 'artworks',
+        reports: 'reports',
+        reviews: 'reviews',
+        logs: 'activity',
+        info: 'info',
+    },
+
+    client: {
+        baseLink: '/admin/users',
+        reviews: 'reviews',
+        orders: 'orders',
+        logs: 'activity',
     }
 
 }

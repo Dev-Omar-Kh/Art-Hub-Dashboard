@@ -33,9 +33,7 @@ export default function AddAdmin() {
     const {data, isLoading} = useFetchQuery(
         ['oneAdmin', id], 
         `${endpoints.admins.getAdmins}/${id}`,
-        {
-            enabled: isEditMode,
-        }
+        {enabled: isEditMode}
     );
 
     // ====== setup-formik-functionality ====== //

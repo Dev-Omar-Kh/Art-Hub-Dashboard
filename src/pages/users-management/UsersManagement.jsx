@@ -91,7 +91,7 @@ export default function UsersManagement() {
     // ====== profile-url ====== //
 
     const profileId = (user) => {
-        return `${user.type === 'clientWord' ? ROUTES.CLIENT_PROFILE_ROUTE : ROUTES.ARTIST_PROFILE_ROUTE}/${user._id}`
+        return `${user.role === 'user' ? ROUTES.CLIENT_PROFILE_ROUTE : ROUTES.ARTIST_PROFILE_ROUTE}/${user._id}`
     };
 
     // ====== handle-delete-row ====== //
@@ -243,7 +243,7 @@ export default function UsersManagement() {
                         <div className='w-full flex items-center justify-center gap-2.5'>
 
                             <Link 
-                                to={`${ROUTES.SEND_MESSAGE_ROUTE}/${user._id}`}
+                                to={`${ROUTES.SEND_MESSAGE_ROUTE}/${user._id}/${user.role}`}
                                 onClick={(e) => user.isActive === false && e.preventDefault()}
                                 className={`
                                     p-2.5 rounded-md bg-[var(--sky-blue-color)]

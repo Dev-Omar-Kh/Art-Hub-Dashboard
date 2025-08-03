@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFilterAndSearch } from '../../../../../hooks/useFilterAndSearch';
 import Numbers from '../../../../../hooks/useConvertNumber';
@@ -12,9 +12,13 @@ import PopUp from '../../../../../components/pop-up/PopUp';
 import PopUpDescription from '../../../../../components/pop-up/pop-up-box/PopUpDescription';
 import WarningBox from '../../../../../components/pop-up/warning-box/WarningBox';
 import { PiWarningOctagonBold } from 'react-icons/pi';
+import { useParams } from 'react-router-dom';
+import { endpoints } from '../../../../../constants/endPoints';
+import { useFetchQuery } from '../../../../../hooks/useFetchQuery';
+import PaginationList from '../../../../../components/pagination-list/PaginationList';
 
 const ordersData = {
-    columns: ['#', 'complainantWord', 'reportTypeWord', 'dateWord', 'reportDescriptionWord', 'statusWord', 'actionsWord'],
+    columns: ['complainantWord', 'reportTypeWord', 'dateWord', 'reportDescriptionWord', 'statusWord', 'actionsWord'],
     data: [
         {
             id: 1,
@@ -70,9 +74,35 @@ const ordersData = {
 
 export default function ArtistReports() {
 
+    const {id} = useParams();
     const {t, i18n} = useTranslation();
 
-    const uniqueStatuses = [...new Set(ordersData.data.map(order => order.status))];
+    // ====== get-artist-reports ====== //
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const prevPage = useRef(currentPage);
+
+    const {data, isLoading, isError} = useFetchQuery(
+        ['artistReports', id, currentPage], 
+        `${endpoints.artist.baseLink}/${id}/${endpoints.artist.reports}?page=${currentPage}&limit=10`
+    );
+
+    useEffect(() => {
+
+        if (prevPage.current !== currentPage) {
+            const main = document.querySelector('#ScrollTop');
+            if (main) {
+                main.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        prevPage.current = currentPage;
+
+    }, [currentPage]);
+
+    // ====== filter-data ====== //
+
+    const uniqueStatuses = [...new Set(data?.data.reports.map(order => order.status))];
     const listData = {
         id: 1,
         data: [
@@ -91,7 +121,7 @@ export default function ArtistReports() {
 
     const excludeValues = useMemo(() => ['allStatusWord'], []);
     const {filteredData, setFilters} = useFilterAndSearch(
-        ordersData.data, initialFilters, excludeValues
+        data?.data.reports, initialFilters, excludeValues
     );
 
     // ====== handle-view-Report-button ====== //
@@ -147,12 +177,14 @@ export default function ArtistReports() {
 
                 <Table data={filteredData}
                     tHeadColor={'var(--light-gray-color)'}
+                    isLoading={isLoading} isError={isError}
                     columns={ordersData.columns} actions={true}
+                    emptyMsg={'noReportsYet'}
                     renderRow={(report) => (
                         <React.Fragment>
 
                             <td className='p-2.5 whitespace-nowrap'>
-                                {Numbers(report.id, i18n.language)}
+                                {report.reporter.displayName}
                             </td>
 
                             <td 
@@ -161,7 +193,7 @@ export default function ArtistReports() {
                                     border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
                                 `}
                             >
-                                {report.complainant}
+                                {'fake type'}
                             </td>
 
                             <td 
@@ -170,16 +202,7 @@ export default function ArtistReports() {
                                     border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
                                 `}
                             >
-                                {report.reportType}
-                            </td>
-
-                            <td 
-                                className={`
-                                    ${i18n.language === 'en' ? 'border-l' : 'border-r'} 
-                                    border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
-                                `}
-                            >
-                                {report.date.split('-').map((item) => (
+                                {report.createdAt.split('T')[0].split('-').map((item) => (
                                     Numbers(item, i18n.language, true)
                                 )).reverse().join(' - ')}
                             </td>
@@ -212,15 +235,13 @@ export default function ArtistReports() {
                             >
                                 <ElementBox title={report.status} 
                                     bgColor={
-                                        report.status === 'resolvedWord' ? 'var(--light-green-color)'
-                                        : report.status === 'pendingWord' ? 'var(--light-yellow-color)'
-                                        : report.status === 'reviewedWord' ? 'var(--sky-blue-color)'
+                                        report.status === 'resolved' ? 'var(--light-green-color)'
+                                        : report.status === 'pending' ? 'var(--light-yellow-color)'
                                         : 'var(--light-red-color)'
                                     } 
                                     color={
-                                        report.status === 'resolvedWord' ? 'var(--green-color)'
-                                        : report.status === 'pendingWord' ? 'var(--yellow-color)'
-                                        : report.status === 'reviewedWord' ? 'var(--dark-blue-color)'
+                                        report.status === 'resolved' ? 'var(--green-color)'
+                                        : report.status === 'pending' ? 'var(--yellow-color)'
                                         : 'var(--red-color)'
                                     } 
                                 />
@@ -252,6 +273,13 @@ export default function ArtistReports() {
                 />
 
             </div>
+
+            {data?.data?.pagination.pages > 1 && 
+                <PaginationList 
+                    data={data?.data?.pagination} darkBtns={true}
+                    currentPage={currentPage} setCurrentPage={setCurrentPage} 
+                    />
+            }
 
         </div>
 

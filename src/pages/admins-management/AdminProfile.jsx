@@ -39,8 +39,6 @@ export default function AdminProfile() {
         `${endpoints.admins.getAdmins}/${id}`
     );
 
-    console.log(data?.data);
-
     return <React.Fragment>
 
         <section className='w-full flex flex-col gap-10'>

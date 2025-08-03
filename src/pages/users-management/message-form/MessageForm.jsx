@@ -31,13 +31,13 @@ const paths = [
 const values = {
     subject: '',
     message: '',
-    attachments: []
+    attachments: ''
 };
 
 export default function MessageForm() {
 
     const {t} = useTranslation();
-    const {id} = useParams();
+    const {id, role} = useParams();
     const navigate = useNavigate();
 
     const [errorMsg, setErrorMsg] = useState(null);
@@ -47,9 +47,26 @@ export default function MessageForm() {
         navigate(-1);
     }
 
-    // ====== get-user-data ====== //
+    // ====== get-info-data ====== //
 
-    const {data, isLoading, isError} = useFetchQuery(["userInfoMsg", id], `${endpoints.users.getUsers}/${id}`);
+    const userInfoRes = useFetchQuery(
+        ["userInfoMsg", id],
+        `${endpoints.users.getUsers}/${id}`,
+        {enabled: role === 'user'}
+    );
+
+    const artistInfoRes = useFetchQuery(
+        ["artistInfoMsg", id],
+        `${endpoints.artist.baseLink}/${id}`,
+        {enabled: role === 'artist'}
+    );
+
+    const infoData = {
+        displayName: userInfoRes.data?.data.displayName || artistInfoRes.data?.data.artist.displayName,
+        profileImage: userInfoRes.data?.data.profileImage.url || artistInfoRes.data?.data.artist.profileImage.url,
+        email: userInfoRes.data?.data.email || artistInfoRes.data?.data.artist.email,
+        isActive: userInfoRes.data?.data.isActive || artistInfoRes.data?.data.artist.isActive,
+    }
 
     // ====== send-message ====== //
 
@@ -108,99 +125,102 @@ export default function MessageForm() {
 
             <PathSteps paths={paths} />
 
-            {isError && <FetchError className='w-full h-118' />}
+            {(userInfoRes.isError || artistInfoRes.isError) && <FetchError className='w-full h-118' />}
 
-            {!isError && <div className='w-full p-5 flex flex-col gap-5 rounded-2xl bg-[var(--white-color)]'>
+            {(!userInfoRes.isError || !artistInfoRes.isError) && (
+                <div className='w-full p-5 flex flex-col gap-5 rounded-2xl bg-[var(--white-color)]'>
 
-                {isLoading && <UserInfoLoading />}
+                    {(userInfoRes.isLoading || artistInfoRes.isLoading) && <UserInfoLoading />}
 
-                {data?.data && <div 
-                    className='
-                        w-full p-2.5 flex items-center gap-2.5 rounded-md bg-[var(--light-gray-color)]
-                        border-l-4 border-[var(--dark-blue-color)]
-                    '
-                >
+                    {(userInfoRes.data || artistInfoRes.data) && infoData && <div 
+                        className='
+                            w-full p-2.5 flex items-center gap-2.5 rounded-md bg-[var(--light-gray-color)]
+                            border-l-4 border-[var(--dark-blue-color)]
+                        '
+                    >
 
-                    <img 
-                        src={data?.data.profileImage.url} alt={`${data?.data.displayName} Profile image`} 
-                        className='w-20 h-20 rounded-full object-cover border-2 border-[var(--dark-blue-color)]' 
-                    />
+                        <img 
+                            src={infoData.profileImage} alt={`${infoData.displayName} Profile image`} 
+                            className='w-20 h-20 rounded-full object-cover border-2 border-[var(--dark-blue-color)]' 
+                        />
 
-                    <div className='flex flex-col gap-1.5'>
+                        <div className='flex flex-col gap-1.5'>
 
-                        <h3 className='text-xl font-semibold text-[var(--dark-blue-color)]'>{data?.data.displayName}</h3>
+                            <h3 className='text-xl font-semibold text-[var(--dark-blue-color)]'>{infoData.displayName}</h3>
 
-                        <p className='text-base text-[var(--gray-color)]'>{data?.data.email}</p>
+                            <p className='text-base text-[var(--gray-color)]'>{infoData.email}</p>
 
-                        <div className='flex items-center gap-2.5'>
-                            <p className='text-base text-[var(--gray-color)]'>{t('statusWord')} :</p>
-                            <div>
-                                <ElementBox 
-                                    title={data?.data.isActive ? 'activeWord' : 'inactiveWord'} 
-                                    color={data?.data.isActive ? 'var(--green-color)' : 'var(--red-color)'} 
-                                    bgColor={data?.data.isActive ? 'var(--light-green-color)' : 'var(--light-red-color)'} />
+                            <div className='flex items-center gap-2.5'>
+                                <p className='text-base text-[var(--gray-color)]'>{t('statusWord')} :</p>
+                                <div>
+                                    <ElementBox 
+                                        title={infoData.isActive ? 'activeWord' : 'inactiveWord'} 
+                                        color={infoData.isActive ? 'var(--green-color)' : 'var(--red-color)'} 
+                                        bgColor={infoData.isActive ? 'var(--light-green-color)' : 'var(--light-red-color)'} />
+                                </div>
                             </div>
+
                         </div>
 
-                    </div>
+                    </div>}
 
-                </div>}
+                    <form onSubmit={formikObj.handleSubmit} className='w-full flex flex-col gap-5'>
 
-                <form onSubmit={formikObj.handleSubmit} className='w-full flex flex-col gap-5'>
-
-                    <Input id={'subject'} 
-                        label={'messageSubjectWord'} type={'text'} password={false}
-                        disabled={sendMessageMutation.isPending || isLoading}
-                        loading={true} placeHolder={'messageSubjectPlaceHolder'}
-                        onChange={formikObj.handleChange} value={formikObj.values.subject}
-                        onBlur={formikObj.handleBlur}
-                        ValidationError={formikObj.touched.subject && formikObj.errors.subject ? formikObj.errors.subject : null}
-                    />
-
-                    <Textarea id={'message'} 
-                        label={'messageTextWord'} 
-                        placeHolder={'messageTextPlaceholder'} 
-                        value={formikObj.values.message}
-                        disabled={sendMessageMutation.isPending || isLoading}
-                        onChange={formikObj.handleChange} onBlur={formikObj.handleBlur}
-                        ValidationError={formikObj.touched.message && formikObj.errors.message ? formikObj.errors.message : null}
-                    />
-
-                    <ImgInput id={'attachments'}
-                        label={'uploadFilesWord'} multiple={true}
-                        value={formikObj.values.attachments} asImage={false}
-                        disabled={sendMessageMutation.isPending || isLoading}
-                        icon={<FaRegFileAlt />}
-                        onChange={(event) => {
-                            const attachments = Array.from(event.target.files);
-                            if (attachments.length > 0) {
-                                formikObj.setFieldValue('attachments', attachments);
-                            }
-                        }}
-                        onBlur={formikObj.handleBlur}
-                    />
-
-                    <div className='w-full flex items-center justify-end gap-2.5'>
-
-                        <FormBtn title={'cancelWord'} onClick={handleGoBack}
-                            bgColor={'var(--gray-color)'} type={'button'}
-                            width={'fit'} rounded={'rounded-md'} color={'var(--white-color)'} 
+                        <Input id={'subject'} 
+                            label={'messageSubjectWord'} type={'text'} password={false}
+                            disabled={sendMessageMutation.isPending || (userInfoRes.isLoading || artistInfoRes.isLoading)}
+                            loading={true} placeHolder={'messageSubjectPlaceHolder'}
+                            onChange={formikObj.handleChange} value={formikObj.values.subject}
+                            onBlur={formikObj.handleBlur}
+                            ValidationError={formikObj.touched.subject && formikObj.errors.subject ? formikObj.errors.subject : null}
                         />
 
-                        <FormBtn title={sendMessageMutation.isPending ? '' : 'sendWord'} 
-                            icon={sendMessageMutation.isPending
-                                ? <LoadingCircle className={'w-5 h-5 border-3 border-t-[transparent] border-[var(--white-color)]'}/>
-                                : <RiMailSendLine className='text-xl' />
-                            } width={'fit'} disabled={sendMessageMutation.isPending || isLoading}
-                            rounded={'rounded-md'} color={'var(--white-color)'} 
-                            bgColor={'var(--dark-blue-color)'} type={'submit'}
+                        <Textarea id={'message'} 
+                            label={'messageTextWord'} 
+                            placeHolder={'messageTextPlaceholder'} 
+                            value={formikObj.values.message}
+                            disabled={sendMessageMutation.isPending || (userInfoRes.isLoading || artistInfoRes.isLoading)}
+                            onChange={formikObj.handleChange} onBlur={formikObj.handleBlur}
+                            ValidationError={formikObj.touched.message && formikObj.errors.message ? formikObj.errors.message : null}
                         />
 
-                    </div>
+                        <ImgInput id={'attachments'}
+                            label={'uploadFilesWord'} multiple={true}
+                            value={formikObj.values.attachments} asImage={false}
+                            disabled={sendMessageMutation.isPending || (userInfoRes.isLoading || artistInfoRes.isLoading)}
+                            icon={<FaRegFileAlt />}
+                            onChange={(event) => {
+                                const attachments = Array.from(event.target.files);
+                                if (attachments.length > 0) {
+                                    formikObj.setFieldValue('attachments', attachments);
+                                }
+                            }}
+                            onBlur={formikObj.handleBlur}
+                        />
 
-                </form>
+                        <div className='w-full flex items-center justify-end gap-2.5'>
 
-            </div>}
+                            <FormBtn title={'cancelWord'} onClick={handleGoBack}
+                                bgColor={'var(--gray-color)'} type={'button'}
+                                width={'fit'} rounded={'rounded-md'} color={'var(--white-color)'} 
+                            />
+
+                            <FormBtn title={sendMessageMutation.isPending ? '' : 'sendWord'} 
+                                icon={sendMessageMutation.isPending
+                                    ? <LoadingCircle className={'w-5 h-5 border-3 border-t-[transparent] border-[var(--white-color)]'}/>
+                                    : <RiMailSendLine className='text-xl' />
+                                } 
+                                disabled={sendMessageMutation.isPending || (userInfoRes.isLoading || artistInfoRes.isLoading)}
+                                width={'fit'} rounded={'rounded-md'} color={'var(--white-color)'} 
+                                bgColor={'var(--dark-blue-color)'} type={'submit'}
+                            />
+
+                        </div>
+
+                    </form>
+
+                </div>
+            )}
 
         </section>
 

@@ -1,11 +1,11 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ListBtn from '../../../../../components/buttons/ListBtn';
 import { useFilterAndSearch } from '../../../../../hooks/useFilterAndSearch';
 import Table from '../../../../../components/table/Table';
 import Numbers from '../../../../../hooks/useConvertNumber';
 import ElementBox from '../../../../../components/elements-box/ElementBox';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { IoBanSharp } from 'react-icons/io5';
 import { FiEdit } from 'react-icons/fi';
 import CurrencyImage from '../../../../../components/currency/CurrencyImage';
@@ -13,25 +13,58 @@ import { AnimatePresence } from 'framer-motion';
 import PopUp from '../../../../../components/pop-up/PopUp';
 import WarningBox from '../../../../../components/pop-up/warning-box/WarningBox';
 import { PiWarningOctagonBold } from 'react-icons/pi';
+import { useFetchQuery } from '../../../../../hooks/useFetchQuery';
+import { endpoints } from '../../../../../constants/endPoints';
+import PaginationList from '../../../../../components/pagination-list/PaginationList';
+import { IoIosArrowForward } from 'react-icons/io';
+import PopUpDescription from '../../../../../components/pop-up/pop-up-box/PopUpDescription';
+import * as Yup from 'yup';
+import DeleteOperation from '../../../../../components/delete-operation/DeleteOperation';
 
 const ordersData = {
-    columns: ['orderNumWord', 'theArtworkWord', 'theArtistWord', 'priceWord', 'dateWord', 'statusWord', 'actionsWord'],
-    data: [
-        {id: 1, title: 'لوحة زيتية مخصصة', artist: 'احمد محمد', date: '18-1-2025', price: '850', status: 'completedWord'},
-        {id: 2, title: 'لوحة مائية حديثة', artist: 'عمر خالد', date: '10-11-2024', price: '1180', status: 'rejectedWord'},
-        {id: 3, title: 'رسم بالفحم لمنظر طبيعي', artist: 'ليلى علي', date: '5-2-2025', price: '990', status: 'progressWord'},
-        {id: 4, title: 'بورتريه كلاسيكي', artist: 'سارة محمود', date: '22-3-2025', price: '1250', status: 'completedWord'},
-        {id: 5, title: 'لوحة تجريدية ملونة', artist: 'محمود حسن', date: '17-4-2025', price: '1075', status: 'completedWord'},
-        {id: 6, title: 'رسم رقمي لمدينة', artist: 'نورا إبراهيم', date: '9-5-2025', price: '890', status: 'rejectedWord'},
-        {id: 7, title: 'منظر بحري هادئ', artist: 'كريم مصطفى', date: '1-6-2025', price: '1130', status: 'progressWord'},
-    ]
+    columns: ['theArtworkWord', 'theArtistWord', 'priceWord', 'dateWord', 'orderDescriptionWord', 'statusWord', 'actionsWord'],
 };
+
+const reasonInput = {
+    id: 'cancellationReason',
+    label: 'reasonWord',
+    placeHolder: 'reasonPlaceHolder',
+    type: 'text',
+    isPassword: false,
+}
 
 export default function ClientOrders() {
 
+    const {id} = useParams();
     const {t, i18n} = useTranslation();
 
-    const uniqueStatuses = [...new Set(ordersData.data.map(order => order.status))]
+    // ====== get-client-orders ======
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const prevPage = useRef(currentPage);
+
+    const {data, isLoading, isError} = useFetchQuery(
+        ['clientOrders', id, currentPage], 
+        `${endpoints.client.baseLink}/${id}/${endpoints.client.orders}?page=${currentPage}&limit=10`
+    );
+
+    useEffect(() => {
+
+        if (prevPage.current !== currentPage) {
+            const main = document.querySelector('#ScrollTop');
+            if (main) {
+                main.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        prevPage.current = currentPage;
+
+    }, [currentPage]);
+
+    // ====== filter-data ======
+
+    const ordersTableData = data?.data.orders;
+    const uniqueStatuses = [...new Set(ordersTableData?.map(order => order.status))]
     const listData = {
         id: 1,
         data: [
@@ -50,28 +83,56 @@ export default function ClientOrders() {
 
     const excludeValues = useMemo(() => ['allStatusWord'], []);
     const {filteredData, setFilters} = useFilterAndSearch(
-        ordersData.data, initialFilters, excludeValues
+        ordersTableData, initialFilters, excludeValues
     );
+
+    // ====== handle-view-Order-button ====== //
+
+    const [openOrderPopUp, setOpenOrderPopUp] = useState(false);
+    const [orderMessage, setOrderMessage] = useState(null);
+
+    const showOrder = (msg) => {
+        setOpenOrderPopUp(true);
+        setOrderMessage(msg);
+    }
 
     // ====== handle-delete-row ====== //
 
     const [isOpen, setIsOpen] = useState(false);
-
-    const handleDeleteRow = () => {
+    const [openCount, setOpenCount] = useState(0);
+    const [itemId, setItemId] = useState(null);
+    const handleDeleteRow = (item) => {
         setIsOpen(true);
+        setItemId(item._id);
+        setOpenCount(prev => prev + 1);
+    }
+
+    const formikConfig = {
+        values: { cancellationReason: '' },
+        validationSchema: Yup.object({
+            cancellationReason: Yup.string()
+                .min(3, t('reasonMinError'))
+                .max(500, t('reasonMaxError'))
+                .required(t('reasonRequiredError')),
+        }),
     }
 
     return <React.Fragment>
 
         <AnimatePresence>
-            {isOpen && <PopUp onClose={() => setIsOpen(false)}>
-                <WarningBox 
-                    icon={<PiWarningOctagonBold />} 
-                    title={'deleteOrderTitle'} msg={'deleteOrderMsg'} 
-                    onClose={() => setIsOpen(false)}
-                />
+            {openOrderPopUp && <PopUp onClose={() => setOpenOrderPopUp(false)}>
+                <PopUpDescription title={'orderDescriptionWord'} msg={orderMessage} onClose={() => setOpenOrderPopUp(false)} />
             </PopUp>}
         </AnimatePresence>
+
+        {isOpen && <DeleteOperation key={openCount} method={'delete'}
+            icon={<PiWarningOctagonBold />} iconColor={'var(--red-color)'}
+            title={'deleteOrderTitle'} msg={'deleteOrderMsg'} 
+            successMsg={'deleteOrderSuccessMsg'} errorMsg={'deleteOrderErrorMsg'}
+            setIsOpen={setIsOpen} tableName={'orders'}
+            endPoint={`${endpoints.orders.getOrders}/${itemId}`} 
+            isInput={true} inputSetup={reasonInput} formikConfig={formikConfig}
+        />}
 
         <div className='w-full flex flex-col gap-5'>
 
@@ -91,11 +152,13 @@ export default function ClientOrders() {
                 <Table data={filteredData}
                     tHeadColor={'var(--light-gray-color)'}
                     columns={ordersData.columns} actions={true}
+                    isLoading={isLoading} isError={isError}
+                    emptyMsg={'noOrdersYetWord'}
                     renderRow={(order) => (
                         <React.Fragment>
 
                             <td className='p-2.5 whitespace-nowrap'>
-                                {`${Numbers(order.id, i18n.language, true)} #`}
+                                {order.requestType}
                             </td>
 
                             <td 
@@ -104,16 +167,7 @@ export default function ClientOrders() {
                                     border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
                                 `}
                             >
-                                {order.title}
-                            </td>
-
-                            <td 
-                                className={`
-                                    ${i18n.language === 'en' ? 'border-l' : 'border-r'} 
-                                    border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
-                                `}
-                            >
-                                {order.artist}
+                                {order.artist.displayName}
                             </td>
 
                             <td 
@@ -134,7 +188,7 @@ export default function ClientOrders() {
                                     border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
                                 `}
                             >
-                                {order.date.split('-').map((item) => (
+                                {order.createdAt.split('T')[0].split('-').map((item) => (
                                     Numbers(item, i18n.language, true)
                                 )).reverse().join(' - ')}
                             </td>
@@ -145,15 +199,39 @@ export default function ClientOrders() {
                                     border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
                                 `}
                             >
+                                <div className='flex items-center justify-center'>
+                                    <button
+                                        onClick={() => showOrder(order.description)}
+                                        className='
+                                            px-2 py-1 flex items-center justify-center gap-1 cursor-pointer 
+                                            text-[var(--dark-blue-color)] bg-[var(--sky-blue-color)] rounded-md
+                                        '
+                                    >
+                                        <p>{t('viewDescriptionWord')}</p>
+                                        <IoIosArrowForward className={`${i18n.language === 'ar' ? 'rotate-y-180' : ''}`} />
+                                    </button>
+                                </div>
+                            </td>
+
+                            <td 
+                                className={`
+                                    ${i18n.language === 'en' ? 'border-l' : 'border-r'} 
+                                    border-solid border-[var(--mid-gray-color)] p-2.5 whitespace-nowrap
+                                `}
+                            >
                                 <ElementBox title={order.status} 
                                     bgColor={
-                                        order.status === 'completedWord' ? 'var(--light-green-color)'
-                                        : order.status === 'progressWord' ? 'var(--light-yellow-color)'
+                                        (order.status === 'مكتمل' || order.status === 'مقبول') ? 'var(--light-green-color)'
+                                        : order.status === 'قيد التنفيذ' ? 'var(--light-yellow-color)'
+                                        : order.status === 'قيد المراجعة' ? 'var(--sky-blue-color)'
+                                        : order.status === 'قيد الانتظار' ? 'var(--light-gray-color)'
                                         : 'var(--light-red-color)'
                                     } 
                                     color={
-                                        order.status === 'completedWord' ? 'var(--green-color)'
-                                        : order.status === 'progressWord' ? 'var(--yellow-color)'
+                                        (order.status === 'مكتمل' || order.status === 'مقبول') ? 'var(--green-color)'
+                                        : order.status === 'قيد التنفيذ' ? 'var(--yellow-color)'
+                                        : order.status === 'قيد المراجعة' ? 'var(--dark-blue-color)'
+                                        : order.status === 'قيد الانتظار' ? 'var(--gray-color)'
                                         : 'var(--red-color)'
                                     } 
                                 />
@@ -181,6 +259,13 @@ export default function ClientOrders() {
                 />
 
             </div>
+
+            {data?.data?.pagination.pages > 1 && 
+                <PaginationList
+                    data={data?.data?.pagination} darkBtns={true}
+                    currentPage={currentPage} setCurrentPage={setCurrentPage} 
+                />
+            }
 
         </div>
 

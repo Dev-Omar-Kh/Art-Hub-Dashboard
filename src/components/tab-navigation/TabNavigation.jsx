@@ -40,6 +40,7 @@ export default function TabNavigation({linksData}) {
     return <React.Fragment>
 
         <nav 
+            id='ScrollTop'
             ref={navRef} 
             className='relative w-full overflow-x-auto overflow-y-hidden hidden-scroll border-b border-[var(--mid-gray-color)]'
         >

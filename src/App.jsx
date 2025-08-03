@@ -50,6 +50,7 @@ const routes = createHashRouter([
             {path: ROUTES.HOME_ROUTE, element: <Home />},
 
             {path: ROUTES.USERS_ROUTE, element: <SubLayout />, children: [
+
                 {path: ROUTES.USERS_ROUTE, element: <UsersManagement />},
 
                 {path: `${ROUTES.ARTIST_PROFILE_ROUTE}/:id`, element: <ArtistProfile />, children: [
@@ -61,14 +62,15 @@ const routes = createHashRouter([
 
                 {path: `${ROUTES.CLIENT_PROFILE_ROUTE}/:id`, element: <ClientProfile />, children: [
 
-                    {index: true, element: <OverView />},
-                    {path: ROUTES.CLIENT_ORDERS_ROUTE, element: <ClientOrders />},
+                    // {index: true, element: <OverView />},
+                    {index: true, element: <ClientOrders />},
                     {path: ROUTES.CLIENT_RATES_ROUTE, element: <ClientRates />},
                     {path: ROUTES.CLIENT_ACTIVITY_LOG_ROUTE, element: <ClientLog />},
 
                 ]},
 
-                {path: `${ROUTES.SEND_MESSAGE_ROUTE}/:id`, element: <MessageForm />},
+                {path: `${ROUTES.SEND_MESSAGE_ROUTE}/:id/:role`, element: <MessageForm />},
+
             ]},
 
             {

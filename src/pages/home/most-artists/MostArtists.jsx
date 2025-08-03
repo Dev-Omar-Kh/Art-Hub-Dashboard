@@ -1,19 +1,31 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ListBtn from '../../../components/buttons/ListBtn';
 import Numbers from './../../../hooks/useConvertNumber';
 import CurrencyImage from './../../../components/currency/CurrencyImage';
 import CardLoading from './CardLoading';
 import FetchError from '../../../components/error/FetchError';
+import { useFetchQuery } from '../../../hooks/useFetchQuery';
+import { endpoints } from '../../../constants/endPoints';
+import EmptyData from '../../../components/error/EmptyData';
 
-export default function MostArtists({data, isLoading, isError}) {
+export default function MostArtists() {
 
     const {t, i18n} = useTranslation();
 
-    const yearsTimeLineData = [2025, 2024, 2023, 2022].map(year => ({
-        label: Numbers(year, i18n.language, true),
-        value: Numbers(year, i18n.language, true),
-    }));
+    const currentDate = new Date();
+    const currentYear = currentDate.getUTCFullYear();
+    const currentMonth = currentDate.getUTCMonth() + 1;
+
+    const [filters, setFilters] = useState({
+        year: currentYear,
+        month: currentMonth
+    });
+
+    const years = [];
+    for (let y = 2023; y <= currentYear; y++) {
+        years.push({ label: Numbers(y, i18n.language, true), value: y });
+    }
 
     const monthsTimeLineData = [
         "janMonth", "febMonth", "marMonth", "aprMonth", "mayMonth", "junMonth",
@@ -24,9 +36,37 @@ export default function MostArtists({data, isLoading, isError}) {
     }));
 
     const filtersData = [
-        {id: 1, data: yearsTimeLineData, key: 'year'},
+        {id: 1, data: years, key: 'year'},
         {id: 2, data: monthsTimeLineData, key: 'month'},
     ];
+
+    const handleFilterChange = (key, value) => {
+        const newFilters = {
+            ...filters,
+            [key]: value
+        };
+        setFilters(newFilters);
+    };
+
+    // ====== get-most-artists-data ====== //
+
+    const {data, isLoading, isError} = useFetchQuery(
+        ["topArtists", filters], 
+        `${endpoints.home.topArtists}?limit=3&year=${filters.year}&month=${filters.month}`
+    );
+
+    const topArtistsData = data?.data.map((artist, idx) => ({
+        id: artist._id,
+        img: artist.profileImage.url,
+        name: artist.displayName,
+        type: artist.job,
+        rank: idx + 1,
+        achievement: [
+            {id: 1, title: 'worksWord', value: artist.performance.artworks, isMoney: false},
+            {id: 2, title: 'salesWord', value: artist.performance.sales, isMoney: true},
+            {id: 3, title: 'rateWord', value: artist.performance.rating, isMoney: false}
+        ],
+    }));
 
     if(isError) return <FetchError className='w-full h-fit' />
 
@@ -41,9 +81,11 @@ export default function MostArtists({data, isLoading, isError}) {
                 <div className='flex items-center gap-2.5'>
 
                     {filtersData.map(list => <ListBtn 
-                        listData={list.data}
                         key={list.key}
-                        onFilterChange={() => console.log('tops')}
+                        listData={list.data}
+                        filterKey={list.key}
+                        selectedValue={filters[list.key]}
+                        onFilterChange={(key, value) => handleFilterChange(key, value)}
                     />)}
 
                 </div>
@@ -59,7 +101,7 @@ export default function MostArtists({data, isLoading, isError}) {
 
                 {isLoading && Array.from({length: 3}).map((_, idx) => <CardLoading key={idx} />)}
 
-                {!isError && !isLoading && data && data.map(card => <div 
+                {!isError && !isLoading && data?.data.length > 0 && topArtistsData.map(card => <div 
                     key={card.id}
                     className={`
                         relative h-fit p-5 flex flex-col items-center justify-center gap-5 
@@ -115,6 +157,8 @@ export default function MostArtists({data, isLoading, isError}) {
                 </div>)}
 
             </div>
+
+            {data?.data.length === 0 && <EmptyData msg={'notfoundTopArtistsWord'} />}
 
         </div>
 

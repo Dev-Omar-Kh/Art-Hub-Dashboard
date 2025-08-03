@@ -1,14 +1,10 @@
 import React from 'react';
-
-// ====== import-images ====== //
-
-import artImg from '../../assets/images/product-1.jpg';
 import Numbers from '../../hooks/useConvertNumber';
 import { useTranslation } from 'react-i18next';
 import CurrencyImage from '../currency/CurrencyImage';
 import ElementBox from '../elements-box/ElementBox';
 
-export default function WorkCard() {
+export default function WorkCard({data}) {
 
     const {i18n} = useTranslation();
 
@@ -18,24 +14,25 @@ export default function WorkCard() {
 
             <img 
                 className='w-full rounded-md h-28 object-cover max-[590px]:h-fit' 
-                src={artImg} alt={`product ${'name'} image`} 
+                src={data.image} alt={`product ${'name'} image`} 
             />
 
             <div className='col-span-2 flex flex-col gap-5'>
 
-                <h3 className='text-lg font-semibold text-[var(--dark-blue-color)]'>الفن التجريدي</h3>
+                <h3 className='text-lg font-semibold text-[var(--dark-blue-color)]'>{data.title}</h3>
 
                 <div className='flex items-center justify-between'>
 
                     <p className='flex items-center gap-1 text-lg font-medium text-[var(--green-color)]'>
-                        {Numbers('1750', i18n.language)}
+                        {Numbers(data.price, i18n.language)}
                         <CurrencyImage width={'w-3'} color='green' />
                     </p>
 
                     <div>
                         <ElementBox 
-                            shadow={true} title={'completedWord'} 
-                            color={'var(--green-color)'} bgColor={'var(--light-green-color)'} 
+                            shadow={true} title={data.isAvailable ? 'availableWord' : 'unavailableWord'} 
+                            bgColor={data.isAvailable ? 'var(--light-green-color)' : 'var(--light-red-color)'} 
+                            color={data.isAvailable ? 'var(--green-color)' : 'var(--red-color)'} 
                         />
                     </div>
 

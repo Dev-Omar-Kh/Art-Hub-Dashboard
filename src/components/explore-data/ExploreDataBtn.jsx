@@ -1,11 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import * as XLSX from 'xlsx';
 import { PiExportBold } from 'react-icons/pi';
-import { useTranslation } from 'react-i18next';
-import { IoIosArrowBack } from 'react-icons/io';
-import { AnimatePresence, motion } from 'framer-motion';
-import Animations from '../../animations/Animations';
 import { useFetchQuery } from '../../hooks/useFetchQuery';
+import SelectBtn from '../buttons/SelectBtn';
 
 const exportOptions = [
     { value: 'excel', label: 'exportAsExcelWord' },
@@ -13,37 +10,13 @@ const exportOptions = [
     { value: 'json', label: 'exportAsJsonWord' },
 ];
 
-export default function ExploreDataBtn({endpoint, dataFormat, queryName, fileName}){
+export default function ExploreDataBtn({endpoint, dataFormat, queryName, fileName, getFullData = true, theParam}){
 
-    const {t} = useTranslation();
-
-    const [displayOptions, setDisplayOptions] = useState(false);
     const [fetchedData, setFetchedData] = useState(null);
-    const listRef = useRef(null);
-
-    // ====== handle-list-button ====== //
-
-    const handleClickOutside = useCallback((event) => {
-    
-        if (listRef.current && !listRef.current.contains(event.target)) {
-            setDisplayOptions(false);
-        }
-
-    }, []);
-
-    useEffect(() => {
-
-        document.addEventListener('mousedown', handleClickOutside);
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-
-    }, [handleClickOutside]);
 
     // ====== get-data ====== //
 
-    const {data, isLoading, isError} = useFetchQuery([queryName], `${endpoint}?limit=full`);
+    const {data, isLoading, isError} = useFetchQuery([...queryName], `${endpoint}${getFullData ? '?limit=full' : theParam}`);
 
     useEffect(() => {
 
@@ -65,9 +38,7 @@ export default function ExploreDataBtn({endpoint, dataFormat, queryName, fileNam
 
     const processDataForExport = (data) => {
 
-        if (!data || !Array.isArray(data) || data.length === 0) {
-            return [];
-        }
+        if (!data || !Array.isArray(data) || data.length === 0) return [];
 
         const processedData = data.map(row => {
 
@@ -76,13 +47,10 @@ export default function ExploreDataBtn({endpoint, dataFormat, queryName, fileNam
             Object.keys(newRow).forEach(key => {
                 const value = newRow[key];
                 
-                // لو القيمة object أو array، حولها لـ JSON string
                 if (value !== null && value !== undefined && typeof value === 'object') {
                     if (Array.isArray(value)) {
-                        // لو array فاضي، حطها null
                         newRow[key] = value.length > 0 ? JSON.stringify(value) : null;
                     } else {
-                        // لو object فاضي، حطها null
                         const keys = Object.keys(value);
                         newRow[key] = keys.length > 0 ? JSON.stringify(value) : null;
                     }
@@ -120,22 +88,148 @@ export default function ExploreDataBtn({endpoint, dataFormat, queryName, fileNam
     // ====== setup export functions ====== //
 
     const exportExcel = () => {
-        const cleanData = processDataForExport(fetchedData);
-        const ws = XLSX.utils.json_to_sheet(cleanData);
+
+        if (!fetchedData) return;
+
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+        if (Array.isArray(fetchedData)) {
+            const cleanData = processDataForExport(fetchedData);
+            if (cleanData.length > 0) {
+                const ws = XLSX.utils.json_to_sheet(cleanData);
+                XLSX.utils.book_append_sheet(wb, ws, "البيانات");
+            }
+        } else if (typeof fetchedData === 'object' && fetchedData !== null) {
+            let hasData = false;
+            for (const [key, value] of Object.entries(fetchedData)) {
+                if (Array.isArray(value) && value.length > 0) {
+                    const cleanData = processDataForExport(value);
+                    if (cleanData.length > 0) {
+                        const ws = XLSX.utils.json_to_sheet(cleanData);
+                        XLSX.utils.book_append_sheet(wb, ws, key.substring(0, 31)); // Excel sheet name limit
+                        hasData = true;
+                    }
+                } else if (typeof value === 'object' && value !== null) {
+                    const cleanData = processDataForExport([value]);
+                    if (cleanData.length > 0) {
+                        const ws = XLSX.utils.json_to_sheet(cleanData);
+                        XLSX.utils.book_append_sheet(wb, ws, key.substring(0, 31));
+                        hasData = true;
+                    }
+                }
+            }
+            
+            // إذا لم توجد بيانات صالحة، أنشئ sheet فارغ
+            if (!hasData) {
+                const ws = XLSX.utils.json_to_sheet([{ message: "لا توجد بيانات للتصدير" }]);
+                XLSX.utils.book_append_sheet(wb, ws, "البيانات");
+            }
+        } else {
+            const ws = XLSX.utils.json_to_sheet([{ value: fetchedData }]);
+            XLSX.utils.book_append_sheet(wb, ws, "البيانات");
+        }
+
+        if (wb.SheetNames.length === 0) {
+            const ws = XLSX.utils.json_to_sheet([{ message: "لا توجد بيانات للتصدير" }]);
+            XLSX.utils.book_append_sheet(wb, ws, "البيانات");
+        }
+
         XLSX.writeFile(wb, `${fileName}.xlsx`);
+
     };
 
     const exportCSV = () => {
-        const cleanData = processDataForExport(fetchedData);
-        const ws = XLSX.utils.json_to_sheet(cleanData);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-        XLSX.writeFile(wb, `${fileName}.csv`, { bookType: "csv" });
+
+        if (!fetchedData) return;
+
+        if (Array.isArray(fetchedData)) {
+            const cleanData = processDataForExport(fetchedData);
+            if (cleanData.length > 0) {
+                const ws = XLSX.utils.json_to_sheet(cleanData);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                XLSX.writeFile(wb, `${fileName}.csv`, { bookType: "csv" });
+            }
+        } else if (typeof fetchedData === 'object' && fetchedData !== null) {
+            let csvContent = '';
+            
+            for (const [key, value] of Object.entries(fetchedData)) {
+                csvContent += `\n=== ${key} ===\n\n`;
+                
+                if (Array.isArray(value) && value.length > 0) {
+                    const cleanData = processDataForExport(value);
+                    if (cleanData.length > 0) {
+                        const headers = Object.keys(cleanData[0]);
+                        csvContent += headers.join(',') + '\n';
+                        
+                        cleanData.forEach(row => {
+                            const values = headers.map(header => {
+                                const val = row[header];
+                                if (val === null || val === undefined) return '';
+                                const strVal = String(val);
+                                if (strVal.includes(',') || strVal.includes('"') || strVal.includes('\n')) {
+                                    return `"${strVal.replace(/"/g, '""')}"`;
+                                }
+                                return strVal;
+                            });
+                            csvContent += values.join(',') + '\n';
+                        });
+                    }
+                } else if (typeof value === 'object' && value !== null) {
+                    const cleanData = processDataForExport([value]);
+                    if (cleanData.length > 0) {
+                        const headers = Object.keys(cleanData[0]);
+                        csvContent += headers.join(',') + '\n';
+                        
+                        cleanData.forEach(row => {
+                            const values = headers.map(header => {
+                                const val = row[header];
+                                if (val === null || val === undefined) return '';
+                                const strVal = String(val);
+                                if (strVal.includes(',') || strVal.includes('"') || strVal.includes('\n')) {
+                                    return `"${strVal.replace(/"/g, '""')}"`;
+                                }
+                                return strVal;
+                            });
+                            csvContent += values.join(',') + '\n';
+                        });
+                    }
+                } else if (value !== null && value !== undefined) {
+                    csvContent += `${key}\n${value}\n`;
+                }
+                
+                csvContent += '\n';
+            }
+            
+            if (csvContent.trim()) {
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `${fileName}.csv`;
+                link.click();
+                
+                setTimeout(() => {
+                    URL.revokeObjectURL(link.href);
+                }, 100);
+            } else {
+                const ws = XLSX.utils.json_to_sheet([{ message: "لا توجد بيانات للتصدير" }]);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                XLSX.writeFile(wb, `${fileName}.csv`, { bookType: "csv" });
+            }
+        } else {
+            const ws = XLSX.utils.json_to_sheet([{ value: fetchedData }]);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+            XLSX.writeFile(wb, `${fileName}.csv`, { bookType: "csv" });
+        }
+
     };
 
     const exportJSON = () => {
+
+        if (!fetchedData) return;
+
         const blob = new Blob([JSON.stringify(fetchedData, null, 2)], {
             type: "application/json",
         });
@@ -143,9 +237,19 @@ export default function ExploreDataBtn({endpoint, dataFormat, queryName, fileNam
         link.href = URL.createObjectURL(blob);
         link.download = `${fileName}.json`;
         link.click();
+
+        setTimeout(() => {
+            URL.revokeObjectURL(link.href);
+        }, 100);
+
     };
 
     const handleExport = (type) => {
+
+        if (!fetchedData) {
+            console.warn("لا توجد بيانات للتصدير");
+            return;
+        }
 
         switch (type) {
             case 'excel':
@@ -160,57 +264,17 @@ export default function ExploreDataBtn({endpoint, dataFormat, queryName, fileNam
             default:
                 console.error("Unknown export type:", type);
         }
-
-        setDisplayOptions(false);
-
     }
 
     return <React.Fragment>
 
-        <div ref={listRef} className='relative'>
-
-            <button 
-                disabled={isLoading || isError}
-                onClick={() => setDisplayOptions(!displayOptions)}
-                className={`
-                    px-5 py-2.5 flex items-center gap-2.5 rounded-md bg-[var(--dark-blue-color)]
-                    text-xl font-medium text-[var(--white-color)]
-                    ${isLoading || isError ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-                `}
-            >
-                <PiExportBold />
-                <p className='text-base'>{t('exportDataWord')}</p>
-                <IoIosArrowBack className={`duration-300 ${displayOptions ? '-rotate-90' : ''}`} />
-            </button>
-
-            <AnimatePresence>
-                {displayOptions && <motion.div
-                    variants={Animations.displayList}
-                    initial='hidden' animate='visible' exit={'exit'}
-                    className='
-                        absolute list-top start-0 w-full max-h-80 overflow-hidden rounded-md 
-                        shadow-[0_0px_10px_var(--shadow-black-color)] bg-[var(--white-color)] 
-                        border border-solid border-[var(--sky-blue-color)] z-20
-                    '
-                >
-
-                    <ul className='w-full max-h-80 rounded-md overflow-auto'>
-
-                        {exportOptions.map( (item, idx) => <li 
-                            key={idx}
-                            onClick={() => handleExport(item.value)}
-                            className={`
-                                w-full p-2.5 border-b border-solid border-[var(--sky-blue-color)] last:border-0 font-medium
-                                text-[var(--dark-blue-color)] text-center duration-300 hover:bg-[var(--sky-blue-color)] cursor-pointer
-                            `}
-                        >{t(item.label)}</li>)}
-
-                    </ul>
-
-                </motion.div>}
-            </AnimatePresence>
-
-        </div>
+        <SelectBtn 
+            icon={<PiExportBold />} 
+            title={'exportDataWord'} 
+            options={exportOptions} 
+            handleClick={handleExport}
+            disabled={isLoading || isError || !fetchedData}
+        />
 
     </React.Fragment>
 

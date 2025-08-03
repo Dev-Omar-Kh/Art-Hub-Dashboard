@@ -1,48 +1,54 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import Numbers from '../../../../../hooks/useConvertNumber';
-import ElementBox from '../../../../../components/elements-box/ElementBox';
 import ArtCard from '../../../../../components/cards/ArtCard';
 import StarRating from '../../../../../components/star-rating/StarRating';
+import { useFetchQuery } from '../../../../../hooks/useFetchQuery';
+import { endpoints } from '../../../../../constants/endPoints';
+import { useParams } from 'react-router-dom';
+import PaginationList from '../../../../../components/pagination-list/PaginationList';
+import EmptyData from '../../../../../components/error/EmptyData';
+import ArtCardLoading from '../../../../../components/cards/ArtCardLoading';
+import FetchError from '../../../../../components/error/FetchError';
 
 export default function ClientRates() {
 
+    const {id} = useParams();
     const { t, i18n } = useTranslation();
 
-    const ratesData = [
-        {
-            id: 1,
-            title: 'لوحة زيتية مخصصة',
-            artist: 'احمد محمد',
-            date: '18-1-2025',
-            rate: 4,
-            comment: 'عمل رائع جدًا ويستحق التقدير.'
-        },
-        {
-            id: 2,
-            title: 'لوحة مائية حديثة',
-            artist: 'عمر خالد',
-            date: '10-11-2024',
-            rate: 3.5,
-            comment: 'العمل جيد، لكن هناك مجال للتحسين.'
-        },
-        {
-            id: 3,
-            title: 'رسم بالفحم لمنظر طبيعي',
-            artist: 'ليلى علي',
-            date: '5-2-2025',
-            rate: 5,
-            comment: 'تحفة فنية بكل المقاييس!'
-        },
-        {
-            id: 4,
-            title: 'بورتريه كلاسيكي',
-            artist: 'سارة محمود',
-            date: '22-3-2025',
-            rate: 4.5,
-            comment: 'عمل ممتاز واحترافي جدًا.'
+    // ====== get-client-rate ====== //
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const prevPage = useRef(currentPage);
+
+    const {data, isLoading, isError} = useFetchQuery(
+        ['clientRates', id, currentPage], 
+        `${endpoints.client.baseLink}/${id}/${endpoints.client.reviews}?page=${currentPage}&limit=10`
+    );
+
+    useEffect(() => {
+
+        if (prevPage.current !== currentPage) {
+            const main = document.querySelector('#ScrollTop');
+            if (main) {
+                main.scrollIntoView({ behavior: 'smooth' });
+            }
         }
-    ];
+
+        prevPage.current = currentPage;
+
+    }, [currentPage]);
+
+    const ratesData = data?.data?.reviews?.map(item => ({
+        id: item._id,
+        title: item.artworkTitle,
+        artist: item.artistName,
+        date: item.createdAt,
+        rate: item.rating,
+        comment: item.comment
+    }));
+
+    if(isError) return <FetchError className='w-full h-fit' />
 
     return <React.Fragment>
 
@@ -52,7 +58,9 @@ export default function ClientRates() {
 
             <div className='w-full flex flex-col gap-2.5'>
 
-                {ratesData.map( rate => <ArtCard key={rate.id} date={false} comment={true} order={rate}>
+                {isLoading && Array.from({length: 3}).map((_, idx) => <ArtCardLoading key={idx}/>)}
+
+                {ratesData?.map( rate => <ArtCard key={rate.id} date={false} comment={true} order={rate}>
 
                     <div
                         className='
@@ -64,7 +72,7 @@ export default function ClientRates() {
                         <StarRating rate={rate.rate} />
 
                         <p className='text-base font-medium text-[var(--gray-color)]'>
-                            {rate.date.split('-').map((item) => (
+                            {rate.date.split('T')[0].split('-').map((item) => (
                                 Numbers(item, i18n.language, true)
                             )).reverse().join(' - ')}
                         </p>
@@ -73,7 +81,16 @@ export default function ClientRates() {
 
                 </ArtCard>)}
 
+                {ratesData?.length === 0 && <EmptyData msg={'noRatesYetWord'} />}
+
             </div>
+
+            {data?.data?.pagination.pages > 1 && 
+                <PaginationList 
+                    data={data?.data?.pagination} darkBtns={true}
+                    currentPage={currentPage} setCurrentPage={setCurrentPage} 
+                />
+            }
 
         </div>
 

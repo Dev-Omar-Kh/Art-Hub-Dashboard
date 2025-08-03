@@ -8,15 +8,29 @@ import MostArtists from './most-artists/MostArtists';
 import { useFetchQuery } from './../../hooks/useFetchQuery';
 import { endpoints } from '../../constants/endPoints';
 import Analysis from './analysis/Analysis';
+import SelectBtn from '../../components/buttons/SelectBtn';
+import ExploreDataBtn from '../../components/explore-data/ExploreDataBtn';
 
 export default function Home() {
 
     const { t, i18n } = useTranslation();
 
-    const homeButtons = [
-        // {id: 1, title: 'displayAnalysisWod', color: 'white'},
-        {id: 2, title: 'downloadReportWord', icon: <LuCloudDownload/>, color: 'var(--white-color)', bgColor: 'var(--dark-blue-color)'},
-    ];
+    // ====== handle-select-year ====== //
+
+    const [yearSelected, setYearSelected] = useState(null);
+
+    const year = new Date().getUTCFullYear();
+    const reportsOptions = [];
+    for (let y = 2023; y <= year; y++) {
+        reportsOptions.push({ 
+            label: `${t('yearWord')} ${Numbers(y, i18n.language, true)}`, 
+            value: y 
+        });
+    }
+
+    const onYearSelect = (value) => {
+        setYearSelected(value);
+    }
 
     // ====== statistics-section-data ====== //
 
@@ -117,31 +131,25 @@ export default function Home() {
 
     ];
 
-    // ====== mostArtists-section-data ====== //
-
-    const topArtistsRes = useFetchQuery("topArtists", endpoints.home.topArtists);
-
-    const topArtistsData = topArtistsRes?.data?.data.map((artist, idx) => ({
-        id: artist._id,
-        img: artist.profileImage.url,
-        name: artist.displayName,
-        type: artist.job,
-        rank: idx + 1,
-        achievement: [
-            {id: 1, title: 'worksWord', value: artist.performance.artworks, isMoney: false},
-            {id: 2, title: 'salesWord', value: artist.performance.sales, isMoney: true},
-            {id: 3, title: 'rateWord', value: artist.performance.rating, isMoney: false}
-        ]
-    }));
-
     return <React.Fragment>
 
         <section className='w-full flex flex-col gap-10'>
 
-            <MainTitle 
-                title={'homeWord'} 
-                slogan={'homePageSlogan'} buttons={homeButtons} 
-            />
+            <MainTitle title={'homeWord'} slogan={'homePageSlogan'}>
+                {!yearSelected && <SelectBtn 
+                    icon={<LuCloudDownload />} title={'downloadReportWord'} 
+                    options={reportsOptions} handleClick={onYearSelect}
+                />}
+
+                {yearSelected && <div>
+                    <ExploreDataBtn 
+                        dataFormat={`data`} fileName={`overview-report-${yearSelected}`}
+                        endpoint={endpoints.home.overView} theParam={`?year=${yearSelected}`} 
+                        queryName={['exportOverview', yearSelected]} getFullData={false}
+                    />
+                </div>}
+
+            </MainTitle>
 
             <Statistics 
                 statisticsData={statisticsData} 
@@ -153,10 +161,7 @@ export default function Home() {
                 isLoading={analysisRes.isLoading} isError={analysisRes.isError} 
             />
 
-            <MostArtists 
-                data={topArtistsData} 
-                isLoading={topArtistsRes.isLoading} isError={topArtistsRes.isError} 
-            />
+            <MostArtists />
 
         </section>
 

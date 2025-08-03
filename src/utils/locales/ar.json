@@ -7,7 +7,7 @@
     "loginWord": "تسجيل الدخول",
     "emailRequiredError": "البريد الإلكتروني مطلوب",
     "emailInvalidError": "البريد الإلكتروني غير صالح",
-    "passwordMinError": "الحد الأدنى 6 أحرف",
+    "passwordMinError": "الحد الأدنى 8 أحرف",
     "passwordRequiredError": "كلمة المرور مطلوبة",
 
     "logoutWord": "تسجيل الخروج",
@@ -89,6 +89,7 @@
     "clientProfileSlogan": "ملف تعريفي شامل للزائر",
     "sendMessageWord": "إرسال رسالة",
     "banWord": "حظر",
+    "reactiveWord": "إعادة تفعيل",
 
     "totalOrdersWord": "إجمالي الطلبات",
     "totalPaymentWord": "إجمالي المدفوعات",
@@ -222,6 +223,8 @@
     "allowCreateOrdersLabel": "السماح للعملاء بإنشاء طلبات جديدة",
     "allowCreateReportsWord": "السماح بإنشاء بلاغات جديدة",
     "allowCreateReportsLabel": "السماح للعملاء بإنشاء بلاغات جديدة",
+    "allowCreateOnlinePaymentWord": "تفعيل الدفع الإلكتروني",
+    "allowCreateOnlinePaymentLabel": "السماح بالدفع عبر الإنترنت للمشتريات",
 
     "paymentInfoWord": "معلومات حساب الدفع",
     "choosePaymentMethodWord": "إختر طريقة الدفع",
@@ -314,6 +317,7 @@
     "addAdminErrorMsg": "فشل إضافة المشرف، يرجى المحاولة لاحقاً",
 
     "changeImageWord": "تغيير الصورة",
+    "changeImagesWord": "تغيير الملفات",
     "updateAdminWord": "تحديث بيانات المشرف",
     "updateAdminSlogan": "تحديث بيانات المشرف الحالي",
     "updateAdminSuccessMsg": "تم تحديث بيانات المشرف بنجاح",
@@ -344,6 +348,33 @@
     "deleteReportErrorMsg": "فشل حذف البلاغ، يرجى المحاولة لاحقاً",
 
     "noDataWord": "لا توجد بيانات",
-    "noArtistsDataWord": "لا توجد بيانات لفنانين"
+    "noArtistsDataWord": "لا توجد بيانات لفنانين",
+
+    "availableWord": "متاح",
+    "unavailableWord": "غير متاح",
+
+    "notFoundWord": "لا يوجد!",
+    "noReportsYet": "لا يوجد بلاغات بعد!",
+    "noRatesYetWord": "لا يوجد تقييمات بعد!",
+    "noWorksYetWord": "لا يوجد أعمال يعد!",
+    "noLogsYetWord": "لا يوجد سجل نشاط بعد!",
+    "noOrdersYetWord": "لا يوجد طلبات بعد!",
+    "notfoundTopArtistsWord": "لا يوجد آداء للفنانين هذا الشهر",
+
+    "last7DaysWord": "آخر 7 أيام",
+    "last30DayWord": "آخر 30 يوم",
+    "last90DayWord": "آخر 90 يوم",
+
+    "statisticsWord": "الإحصائيات",
+
+    "updateProfileSuccessMsg": "تم تحديث الملف الشخصي بنجاح",
+    "updateProfileErrorMsg": "فشل تحديث الملف الشخصي، يرجى المحاولة لاحقاً",
+
+    "passwordNumberError": "يجب وجود رقم",
+    "passwordLowercaseError": "يجب وجود حرف صغير",
+    "passwordUppercaseError": "يجب وجود حرف كبير",
+    "passwordSpecialCharError": "يجب وجود رمز خاص",
+
+    "yearWord": "سنة"
 
 }

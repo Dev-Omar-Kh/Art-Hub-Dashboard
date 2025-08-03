@@ -47,7 +47,7 @@ export default function Input({
 
             <label 
                 className={`
-                    flex items-center justify-between gap-1.5 text-base font-medium 
+                    flex flex-wrap items-center justify-between gap-1.5 text-base font-medium 
                     ${hasValue ? 'text-[var(--dark-blue-color)]' : 'text-[var(--gray-color)]'} 
                     duration-300 group-focus-within:text-[var(--dark-blue-color)]
                 `} 

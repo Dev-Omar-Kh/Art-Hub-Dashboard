@@ -1,7 +1,7 @@
 import React from 'react';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
-const Button = ({ text, content, onClick, disabled, current }) => {
+const Button = ({ text, content, onClick, disabled, current, darkBtns = false }) => {
 
     return <React.Fragment>
         
@@ -10,7 +10,7 @@ const Button = ({ text, content, onClick, disabled, current }) => {
                 h-10 w-10 rounded-md 
                 ${current
                     ? 'bg-[var(--dark-blue-color)] text-[var(--white-color)]'
-                    : 'bg-[var(--white-color)]'} 
+                    : (darkBtns ? 'bg-[var(--sky-blue-color)]' : 'bg-[var(--white-color)]')} 
                 flex items-center justify-center gap-1
                 ${disabled ? 'cursor-not-allowed text-[var(--gray-color)]' : 'cursor-pointer text-[var(--dark-blue-color)]'} ${text}
             `}
@@ -23,7 +23,7 @@ const Button = ({ text, content, onClick, disabled, current }) => {
 
 };
 
-export default function PaginationList({data, setCurrentPage, currentPage}) {
+export default function PaginationList({data, setCurrentPage, currentPage, darkBtns}) {
 
     const totalPages = data?.pages;
 
@@ -83,20 +83,20 @@ export default function PaginationList({data, setCurrentPage, currentPage}) {
 
             <Button
                 text="text-xl rtl:rotate-180"
-                content={<IoIosArrowBack />}
+                content={<IoIosArrowBack />} darkBtns={darkBtns}
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
             />
 
             {pageList.map((item, index) =>
                 item === '...' ? (
-                    <Button key={`dot-${index}`} content={'...'} text="text-base font-medium" />
+                    <Button key={`dot-${index}`} content={'...'} text="text-base font-medium" darkBtns={darkBtns} />
                 ) : (
                     <Button
                         key={item}
                         text="text-base font-medium"
                         current={currentPage === item}
-                        content={item}
+                        content={item} darkBtns={darkBtns}
                         onClick={() => setCurrentPage(item)}
                     />
                 )
@@ -104,7 +104,7 @@ export default function PaginationList({data, setCurrentPage, currentPage}) {
 
             <Button
                 text="text-xl rtl:rotate-180"
-                content={<IoIosArrowForward />}
+                content={<IoIosArrowForward />} darkBtns={darkBtns}
                 onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}
             />

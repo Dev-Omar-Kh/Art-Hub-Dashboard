@@ -1,8 +1,10 @@
 import * as Yup from 'yup';
 
-export const adminValidation = (t, isEditMode = false) => (
+export const profileValidation = (t) => (
 
     Yup.object({
+
+        profileImage: Yup.mixed().nullable(),
 
         displayName: Yup.string()
             .min(3, t('nameMinError'))
@@ -13,9 +15,12 @@ export const adminValidation = (t, isEditMode = false) => (
             .email(t('emailInvalidError'))
             .required(t('emailRequiredError')),
 
-        password: Yup.string()
-            .when([], {
-                is: () => !isEditMode,
+        currentPassword: Yup.string()
+            .nullable(),
+
+        newPassword: Yup.string()
+            .when('currentPassword', {
+                is: (val) => val && val.length > 0,
                 then: (schema) => schema
                     .required(t('passwordRequiredError'))
                     .min(8, t('passwordMinError'))
@@ -34,34 +39,16 @@ export const adminValidation = (t, isEditMode = false) => (
                 otherwise: (schema) => schema.nullable(),
             }),
 
-        confirmPassword: Yup.string()
-            .when('password', {
+        confirmNewPassword: Yup.string()
+            .when('newPassword', {
                 is: (val) => val && val.length > 0,
                 then: (schema) =>
                     schema
-                        .oneOf([Yup.ref('password')], t('confirmPasswordMatchError'))
+                        .oneOf([Yup.ref('newPassword')], t('confirmPasswordMatchError'))
                         .required(t('confirmPasswordRequiredError')),
                 otherwise: (schema) => schema.nullable(),
             }),
 
-        role: Yup.object()
-            .shape({
-                label: Yup.string().required(),
-                value: Yup.string().required()
-            })
-            .nullable()
-            .required(t('roleRequiredError')),
-
-        profileImage: isEditMode
-            ? Yup.mixed().nullable()
-            : Yup.mixed()
-                .test('fileRequired', t('imageRequiredError'), (value) => {
-                    return value && value instanceof File;
-                }),
-
     })
 
 );
-
-export const addAdminValidation = (t) => adminValidation(t, false);
-export const editAdminValidation = (t) => adminValidation(t, true);
